@@ -7,7 +7,9 @@ import { Box } from '@mui/system';
 import * as React from 'react';
 import { useHistory } from "react-router-dom";
 import { useTheme } from '@mui/material/styles';
-
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import IconButton from '@mui/material/IconButton';
 
 function Login() {
 
@@ -24,6 +26,7 @@ function Login() {
   const textFieldStyle = {margin:'8px 0'}
 
   const [checked, setChecked] = React.useState([true, false]);
+  const [visiblePassword, setVisiblePassword] = React.useState(false)
   const history = useHistory();
   
   const handleChangeCheckBox = (event) => {
@@ -32,6 +35,11 @@ function Login() {
 
   function handleSignIn (){
     history.push(`/pokemons`);
+  }
+
+  function handleVisiblePassword (){
+    if (visiblePassword) setVisiblePassword(false)
+    else setVisiblePassword(true)
   }
 
   return (
@@ -44,7 +52,12 @@ function Login() {
           </Grid>
           <Grid align="center">
               <TextField style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
-              <TextField style={textFieldStyle} label='Password' placeholder='Enter password' type='password' fullWidth required/>
+              <Grid display="flex" justifyContent={"space-between"}>
+                  <TextField style={textFieldStyle} label='Password' placeholder='Enter password' type={visiblePassword ? '' : 'password'} required/>
+                  <IconButton onClick={handleVisiblePassword} color="primary" aria-label="upload picture" component="label" sx={{mr:1.5}}>
+                      {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>} 
+                  </IconButton>
+              </Grid>
               <FormControlLabel
                   label="Remember Me"
                   control={<Checkbox checked={checked[0]} onChange={handleChangeCheckBox} />}
@@ -55,9 +68,9 @@ function Login() {
                   Forgot Password ?
                 </Link>
               </Typography>
-              <Typography> Do you have an account ?
+              <Typography> Don't have an account yet ?
                 <Link href="#">
-                  {" "}Sign Up ?
+                  {" "}Sign Up
                 </Link>
               </Typography>
           </Grid>
