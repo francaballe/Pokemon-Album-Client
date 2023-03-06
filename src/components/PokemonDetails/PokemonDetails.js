@@ -1,29 +1,20 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ShareIcon from '@mui/icons-material/Share';
-import Avatar from '@mui/material/Avatar';
+import HighlightOffSharpIcon from '@mui/icons-material/HighlightOffSharp';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import Collapse from '@mui/material/Collapse';
-import { red } from '@mui/material/colors';
+import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
+import { Box } from '@mui/system';
 import axios from "axios";
 import * as React from 'react';
 import { useEffect, useState } from "react";
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import CloseIcon from '@mui/icons-material/Close';
-import HighlightOffSharpIcon from '@mui/icons-material/HighlightOffSharp';
 import { useHistory } from "react-router-dom";
-import { Box } from '@mui/system';
-import { Button } from '@mui/material';
-import Rating from '@mui/material/Rating';
 
 
 const ExpandMore = styled((props) => {
