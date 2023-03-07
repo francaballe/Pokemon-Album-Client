@@ -12,11 +12,14 @@ import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { getUserInformation } from "../../redux/actions/index"
+import { useSelector } from 'react-redux';
 
 function Login() {
 
   const theme = useTheme();
+  const history = useHistory();
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.loggedInUser);
   
   const image = "https://wallpaperaccess.com/full/697708.jpg"
   //const image = "https://wallpaperaccess.com/full/697715.jpg"
@@ -31,8 +34,12 @@ function Login() {
   const [checked, setChecked] = React.useState([true, false]);
   const [visiblePassword, setVisiblePassword] = React.useState(false)
   const [user, setUser] = React.useState(undefined)
-
-  const history = useHistory();
+  const [loggedIn, setLoggedIn] = React.useState(false)
+  
+  useEffect(()=>{
+    if (userData.id) history.push(`/pokemons`);
+  },[userData])
+  
   
 /********************************************************HANDLERS************************************************************/
 
@@ -56,12 +63,10 @@ function Login() {
 
   function handleSignIn (){
     dispatch(getUserInformation(user));
-    history.push(`/pokemons`);
+    setLoggedIn(true)
   }
 
-  /* useEffect(()=>{
-    dispatch(getUserInformation());
-  },[dispatch]) */
+  
 
   return (
     <Box style={mainContainerStyle}>
