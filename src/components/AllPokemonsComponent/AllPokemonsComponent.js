@@ -16,13 +16,20 @@ import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from "react-router-dom";
 
 function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
 
+  const userData = useSelector((state) => state.loggedInUser);
+  //console.log("soy testData:",testData)
+  
+  //console.log("datos:",userData)
+
   const history = useHistory();
 
-  const simulatedUserData = [1,3,6,7,9,11,14,37,51,54,49,62,63,71,25,21,20,31,24,40,42,43,47,67,77,74,10013,10014,10016,10021,10009]
+  //console.log("soy los disponibles:",userData.pokemons)
+  //const simulatedUserData = [1,3,6,7,9,11,14,37,51,54,49,62,63,71,25,21,20,31,24,40,42,43,47,67,77,74,10013,10014,10016,10021,10009]
 
   const [rarity, setRarity] = React.useState("Any Rarity");
   const [type, setType] = React.useState("Any Type");
@@ -50,9 +57,9 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
   : filteredByRarity
 
   const filteredByAvailability = available!=="Show All" ? (available==="Only Available Pokemons" ?
-      filteredByType.filter(onePokemon => simulatedUserData.includes(onePokemon.id))
+      filteredByType.filter(onePokemon => userData.pokemons.includes(onePokemon.id))
       :
-      filteredByType.filter(onePokemon => !simulatedUserData.includes(onePokemon.id)))
+      filteredByType.filter(onePokemon => !userData.pokemons.includes(onePokemon.id)))
   : filteredByType
 
   const filteredBySearch = nameFilter ? filteredByAvailability.filter(onePokemon => onePokemon.name.includes(nameFilter))
@@ -170,7 +177,7 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
                 <Card
                   sx={{ py:1, px:1, height: '100%', display: 'flex', 
                   flexDirection: 'column', border: 5, borderRadius: 10,
-                  opacity: simulatedUserData.includes(card.id) ? '100%' : '10%',
+                  opacity: userData.pokemons && userData.pokemons.includes(card.id) ? '100%' : '10%',
                   borderColor: card.stars===5 ? 'legendary.main' : 
                                 card.stars===4 ? 'epic.main' : 
                                 card.stars===3 ? 'rare.main' : 
@@ -206,7 +213,7 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
                       #{card.id}  
                     </Typography>
                     <Typography align='center'>                        
-                        <Button onClick={()=>handleMoreInfoClick(card.id)} size="small" disabled={simulatedUserData.includes(card.id)?false:true}>More Info</Button>
+                        <Button onClick={()=>handleMoreInfoClick(card.id)} size="small" disabled={userData.pokemons && userData.pokemons.includes(card.id)?false:true}>More Info</Button>
                     </Typography>
                   </CardContent>
                                     

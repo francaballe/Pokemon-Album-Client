@@ -1,19 +1,22 @@
-import { ThemeProvider } from '@emotion/react';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { Avatar, Button, colors, Grid, Link, Paper, TextField, Typography } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { Avatar, Button, Grid, Link, Paper, TextField, Typography } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import IconButton from '@mui/material/IconButton';
+import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import * as React from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { useTheme } from '@mui/material/styles';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import IconButton from '@mui/material/IconButton';
+import { getUserInformation } from "../../redux/actions/index"
 
 function Login() {
 
   const theme = useTheme();
+  const dispatch = useDispatch();
   
   const image = "https://wallpaperaccess.com/full/697708.jpg"
   //const image = "https://wallpaperaccess.com/full/697715.jpg"
@@ -27,20 +30,38 @@ function Login() {
 
   const [checked, setChecked] = React.useState([true, false]);
   const [visiblePassword, setVisiblePassword] = React.useState(false)
+  const [user, setUser] = React.useState(undefined)
+
   const history = useHistory();
   
+/********************************************************HANDLERS************************************************************/
+
   const handleChangeCheckBox = (event) => {
     setChecked([event.target.checked, event.target.checked]);
   };
-
-  function handleSignIn (){
-    history.push(`/pokemons`);
-  }
 
   function handleVisiblePassword (){
     if (visiblePassword) setVisiblePassword(false)
     else setVisiblePassword(true)
   }
+
+  const changePasswordHandler=(event)=>{
+    //console.log(event.target.value);
+  }
+
+  const changeUserHandler=(event)=>{
+    setUser(event.target.value)
+    //console.log(event.target.value);
+  }
+
+  function handleSignIn (){
+    dispatch(getUserInformation(user));
+    history.push(`/pokemons`);
+  }
+
+  /* useEffect(()=>{
+    dispatch(getUserInformation());
+  },[dispatch]) */
 
   return (
     <Box style={mainContainerStyle}>
@@ -51,10 +72,10 @@ function Login() {
               <h2>Sign in</h2>
           </Grid>
           <Grid align="center">
-              <TextField style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
+              <TextField onChange={changeUserHandler} style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
               <Grid display="flex" justifyContent={"space-between"}>
-                  <TextField style={textFieldStyle} label='Password' placeholder='Enter password' type={visiblePassword ? '' : 'password'} required/>
-                  <IconButton onClick={handleVisiblePassword} color="primary" aria-label="upload picture" component="label" sx={{mr:1.5}}>
+                  <TextField onChange={changePasswordHandler} style={textFieldStyle} label='Password' placeholder='Enter password' type={visiblePassword ? '' : 'password'} required/>
+                  <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" sx={{mr:1.5}}>
                       {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>} 
                   </IconButton>
               </Grid>

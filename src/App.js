@@ -1,6 +1,3 @@
-import { blue } from "@mui/material/colors";
-import blueGrey from "@mui/material/colors/blueGrey.js";
-import red from "@mui/material/colors/red.js";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from "axios";
 import * as React from 'react';
@@ -9,7 +6,7 @@ import { Route } from "react-router-dom";
 import AllPokemonsComponent from "../src/components/AllPokemonsComponent/AllPokemonsComponent.js";
 import Login from "../src/components/Login/Login.js";
 import Navbar from "../src/components/Navbar/Navbar.js";
-import PokemonDetails from "../src/components/PokemonDetails/PokemonDetails"
+import PokemonDetails from "../src/components/PokemonDetails/PokemonDetails";
 
 
 function App() {
@@ -56,17 +53,19 @@ function App() {
     setDarkMode(mode)
   }
 
-  const [allPokemons, setAllPokemons] = useState([]);
+  const [allPokemons, setAllPokemons] = React.useState([]);
 
   async function fetchData (){
     const respuesta = await axios.get("http://localhost:3001/pokemons")
     if (respuesta) setAllPokemons(respuesta.data)
   }
-
+  
   useEffect(()=>{
     fetchData();
   },[])
   
+
+
   return (
     <div className="App">
 
