@@ -24,7 +24,7 @@ function Login() {
   const image = "https://wallpaperaccess.com/full/697708.jpg"
   //const image = "https://wallpaperaccess.com/full/697715.jpg"
   
-  const paperStyle = {padding: 20, height:'70vh', width:280, /* opacity: '85%' */}
+  const paperStyle = {padding: 20, height:'70vh', width:280}
   const avatarStyle = {backgroundColor:theme.palette.primary.main}
   const mainContainerStyle = { backgroundImage:`url(${image})`,backgroundRepeat:"no-repeat",backgroundSize:"contain", 
   height:'100vh',width:'100vw' }
@@ -33,16 +33,25 @@ function Login() {
 
   const [checked, setChecked] = React.useState([true, false]);
   const [visiblePassword, setVisiblePassword] = React.useState(false)
-  const [user, setUser] = React.useState(undefined)
-  const [password,setPassword] = React.useState(undefined)
-  const [loginError, setLoginError] = React.useState(false)
+  const [user, setUser] = React.useState("")
+  const [password,setPassword] = React.useState("")
+  const [loginError, setLoginError] = React.useState(undefined)
   const [firtClick, setFirstClick] = React.useState(false)
-  
+
   useEffect(()=>{
-    if (userData.hasOwnProperty("id")) history.push(`/pokemons`)
-    else
-        if (firtClick) setLoginError(true) //si esta vacio no funciona
-  },[userData, dispatch])
+    
+    if (userData.hasOwnProperty("id")) {
+      setLoginError(false)
+      //console.log("logueo OK")
+      history.push(`/pokemons`)
+    }
+    if (userData==="login failed") {
+      setLoginError(true)
+      //console.log("logueo MAL")
+    }
+      
+  },[userData])
+
   
   
 /********************************************************HANDLERS************************************************************/
@@ -58,17 +67,16 @@ function Login() {
 
   const changePasswordHandler=(event)=>{
     setPassword(event.target.value)
-    //console.log(event.target.value);
   }
 
   const changeUserHandler=(event)=>{
     setUser(event.target.value)
-    //console.log(event.target.value);
   }
 
   function handleSignIn (){
     dispatch(getUserInformation(user, password));
     setFirstClick(true)
+    //console.log("hice click")
   }
   
 
@@ -98,15 +106,22 @@ function Login() {
                   Forgot Password ?
                 </Link>
               </Typography>
-              <Typography> Don't have an account yet ?
+              <Typography style={textFieldStyle}> Don't have an account yet ?
                 <Link href="#">
                   {" "}Sign Up
                 </Link>
               </Typography>
-              {loginError && 
+              {(firtClick && loginError) ? 
                   <Typography color="red">
                     Login Error! Try Again
                   </Typography>
+                  :
+                  (firtClick && loginError===false) ?
+                  <Typography color="green">
+                    Login Success!
+                  </Typography>
+                  :
+                  null
               }
           </Grid>
         </Paper>
