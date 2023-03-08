@@ -34,11 +34,15 @@ function Login() {
   const [checked, setChecked] = React.useState([true, false]);
   const [visiblePassword, setVisiblePassword] = React.useState(false)
   const [user, setUser] = React.useState(undefined)
-  const [loggedIn, setLoggedIn] = React.useState(false)
+  const [password,setPassword] = React.useState(undefined)
+  const [loginError, setLoginError] = React.useState(false)
+  const [firtClick, setFirstClick] = React.useState(false)
   
   useEffect(()=>{
-    if (userData.id) history.push(`/pokemons`);
-  },[userData])
+    if (userData.hasOwnProperty("id")) history.push(`/pokemons`)
+    else
+        if (firtClick) setLoginError(true) //si esta vacio no funciona
+  },[userData, dispatch])
   
   
 /********************************************************HANDLERS************************************************************/
@@ -53,6 +57,7 @@ function Login() {
   }
 
   const changePasswordHandler=(event)=>{
+    setPassword(event.target.value)
     //console.log(event.target.value);
   }
 
@@ -62,10 +67,9 @@ function Login() {
   }
 
   function handleSignIn (){
-    dispatch(getUserInformation(user));
-    setLoggedIn(true)
+    dispatch(getUserInformation(user, password));
+    setFirstClick(true)
   }
-
   
 
   return (
@@ -88,7 +92,7 @@ function Login() {
                   label="Remember Me"
                   control={<Checkbox checked={checked[0]} onChange={handleChangeCheckBox} />}
               />
-              <Button type='submit' color='primary' variant="contained" style={btnStyle} fullWidth onClick={handleSignIn}>Sign In</Button>
+              <Button /* type='submit' */ color='primary' variant="contained" style={btnStyle} fullWidth onClick={handleSignIn}>Sign In</Button>
               <Typography style={textFieldStyle}>
                 <Link href="#">
                   Forgot Password ?
@@ -99,6 +103,11 @@ function Login() {
                   {" "}Sign Up
                 </Link>
               </Typography>
+              {loginError && 
+                  <Typography color="red">
+                    Login Error! Try Again
+                  </Typography>
+              }
           </Grid>
         </Paper>
       </Grid>
