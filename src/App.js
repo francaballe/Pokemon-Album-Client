@@ -8,6 +8,9 @@ import Login from "../src/components/Login/Login.js";
 import Navbar from "../src/components/Navbar/Navbar.js";
 import PokemonDetails from "../src/components/PokemonDetails/PokemonDetails";
 
+//import bcrypt from "bcrypt"
+//const bcrypt = require('bcrypt');
+
 
 function App() {
 
