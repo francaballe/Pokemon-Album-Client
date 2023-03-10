@@ -58,10 +58,13 @@ function App() {
   }
 
   const [allPokemons, setAllPokemons] = React.useState([]);
+  const [allTypes, setAllTypes] = React.useState([]);
 
   async function fetchData (){
     const respuesta = await axios.get("http://localhost:3001/pokemons")
     if (respuesta) setAllPokemons(respuesta.data)
+    const respuesta2 = await axios.get("http://localhost:3001/types")
+    if (respuesta2) setAllTypes(respuesta2.data)
   }
   
   useEffect(()=>{
@@ -76,7 +79,7 @@ function App() {
     <Routes>
           <Route path="/" element={<Login/>}></Route>
           <Route element={<Navbar setDarkLight={setDarkLight} onSearch={onSearch}/>}>
-              <Route path="/pokemons" element={<AllPokemonsComponent allPokemons={allPokemons} darkMode={darkMode} nameFilter={nameFilter}/>}/>
+              <Route path="/pokemons" element={<AllPokemonsComponent allTypes={allTypes} allPokemons={allPokemons} darkMode={darkMode} nameFilter={nameFilter}/>}/>
               <Route path="/pokemons/:pokemonId" element={<PokemonDetails darkMode={darkMode}/>}/>
           </Route>
           <Route path="*" element={<>NOT FOUND</>}></Route>          

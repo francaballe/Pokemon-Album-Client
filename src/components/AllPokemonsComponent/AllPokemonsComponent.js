@@ -19,24 +19,19 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
+function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
 
   const userData = useSelector((state) => state.loggedInUser);
-  //console.log("soy testData:",testData)
-  
-  //console.log("datos:",userData)
-
-  //const history = useHistory();
   const navigate = useNavigate();
-
-  //console.log("soy los disponibles:",userData.pokemons)
-  //const simulatedUserData = [1,3,6,7,9,11,14,37,51,54,49,62,63,71,25,21,20,31,24,40,42,43,47,67,77,74,10013,10014,10016,10021,10009]
-
   const [rarity, setRarity] = React.useState("Any Rarity");
   const [type, setType] = React.useState("Any Type");
   const [order, setOrder] = React.useState("No Order");
   const [available, setAvailable] = React.useState("Show All");
 
+  //STYLES
+  const pokemonTypeStyle = {/* padding: 20, */ height:'3vh'}
+
+  //PAGING
   const pokemonsPerPage = 16
   const [page, setPage] = React.useState(1);
   const allPokemonsCpy = [...allPokemons]
@@ -58,9 +53,9 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
   : filteredByRarity
 
   const filteredByAvailability = available!=="Show All" ? (available==="Only Available Pokemons" ?
-      filteredByType.filter(onePokemon => userData.pokemons.includes(onePokemon.id))
+      filteredByType.filter(onePokemon => userData.id && userData.pokemons.includes(onePokemon.id))
       :
-      filteredByType.filter(onePokemon => !userData.pokemons.includes(onePokemon.id)))
+      filteredByType.filter(onePokemon => userData.id && !userData.pokemons.includes(onePokemon.id)))
   : filteredByType
 
   const filteredBySearch = nameFilter ? filteredByAvailability.filter(onePokemon => onePokemon.name.includes(nameFilter))
@@ -82,8 +77,8 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
   const pokemonsToShow = filteredBySearch.slice((pokemonsPerPage*page)-pokemonsPerPage,pokemonsPerPage*page)
   
 
-  const pokemonTypes = ["Any Type","Normal","Fighting","Flying","Poison","Ground","Rock","Bug","Ghost","Steel","Fire",
-  "Water","Grass","Electric","Psychic","Ice","Dragon","Dark","Fairy"]
+  /* const pokemonTypes = ["Any Type","Normal","Fighting","Flying","Poison","Ground","Rock","Bug","Ghost","Steel","Fire",
+  "Water","Grass","Electric","Psychic","Ice","Dragon","Dark","Fairy"] */
 
   const pokemonRarities = ["Any Rarity","Common","Uncommon","Rare","Epic","Legendary"]
 
@@ -128,12 +123,27 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
       <AppBar position="relative">
 
         <Toolbar sx={{ pt: 0, justifyContent:"space-evenly" }}>
-
+        
           <Box>
             <FormControl sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel id="Pokemon-Type-label-id">Pokemon Type</InputLabel>
-                <Select value={type} label="Pokemon Type" onChange={handleTypeChange}>
-                    {pokemonTypes.map(oneType => <MenuItem key={oneType} value={oneType}>{oneType}</MenuItem>)}
+                <Select value={type} label="Pokemon Type" onChange={handleTypeChange}
+                    /* sx={{ width: '100%', alignContent:"center", py:1}} */
+                >
+                    {allTypes.map(oneType => 
+                    <MenuItem key={oneType.id} value={oneType.name}>
+                      <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", /* backgroundColor: "blue", */ width:"100%"}}>
+                        {oneType.name}
+                        <Box sx={{display: "flex", justifyItems:"center"}}>
+                          <CardMedia 
+                            style={pokemonTypeStyle}
+                            component="img"
+                            image={oneType.image}
+                            alt="type image"
+                          />
+                        </Box>
+                      </Box>
+                    </MenuItem>)}
                 </Select>
             </FormControl>
 
