@@ -14,7 +14,7 @@ import { Box } from '@mui/system';
 import axios from "axios";
 import * as React from 'react';
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const ExpandMore = styled((props) => {
@@ -28,15 +28,16 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-function PokemonDetails({pokemonId, darkMode}) {
+function PokemonDetails({ darkMode }) {
 
   const [selectedPokemon, setSelectedPokemon] = useState(undefined)
-  const history = useHistory();
+  const navigate = useNavigate();
+  const { pokemonId } = useParams(); //I'm destructuring the received data
 
   async function fetchData (){
     const respuesta = await axios.get(`http://localhost:3001/pokemons/${pokemonId}`)
     if (respuesta) setSelectedPokemon(respuesta.data)
-    if (respuesta) console.log(respuesta.data)
+    /* if (respuesta) console.log(respuesta.data) */
   }
 
   useEffect(()=>{
@@ -51,7 +52,7 @@ function PokemonDetails({pokemonId, darkMode}) {
   };
 
   function handleBackToMain (){
-    history.push(`/pokemons`);
+    navigate(`/pokemons`);
   }
 
   return (

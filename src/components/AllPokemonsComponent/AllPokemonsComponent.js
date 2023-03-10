@@ -17,7 +17,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
 
@@ -26,7 +26,8 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
   
   //console.log("datos:",userData)
 
-  const history = useHistory();
+  //const history = useHistory();
+  const navigate = useNavigate();
 
   //console.log("soy los disponibles:",userData.pokemons)
   //const simulatedUserData = [1,3,6,7,9,11,14,37,51,54,49,62,63,71,25,21,20,31,24,40,42,43,47,67,77,74,10013,10014,10016,10021,10009]
@@ -115,7 +116,7 @@ function AllPokemonsComponent({allPokemons, darkMode, nameFilter}) {
   }
 
   function handleMoreInfoClick (id){
-    history.push(`/pokemons/${id}`);
+    navigate(`/pokemons/${id}`)
   }
 
 /**************************************************************************************************************************/

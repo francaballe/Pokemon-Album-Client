@@ -16,7 +16,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { useHistory } from "react-router-dom";
+import { Outlet, useNavigate } from 'react-router-dom';
 import SearchAppBar from '../Navbar/SearchAppBar/SearchAppBar';
 
 
@@ -24,8 +24,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar({setDarkLight, onSearch}) {
 
-  const history = useHistory();
-
+  const navigate = useNavigate();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [darkMode,setDarkMode] = React.useState("light")
 
@@ -49,12 +48,12 @@ function Navbar({setDarkLight, onSearch}) {
   };
 
   function handleBackToMain (){
-    history.push(`/pokemons`);
+    navigate(`/pokemons`);
   }
 
 
   return (
-    
+    <div>
     <AppBar position="relative">
   
         <Toolbar sx={{ pt: 0, justifyContent:"space-between" }}>
@@ -134,6 +133,8 @@ function Navbar({setDarkLight, onSearch}) {
 
     </AppBar>
     
+    <Outlet/>
+    </div>
   );
 }
 export default Navbar;

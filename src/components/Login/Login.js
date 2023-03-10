@@ -10,14 +10,14 @@ import { Box } from '@mui/system';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { getUserInformation } from "../../redux/actions/index"
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.loggedInUser);
   
@@ -40,10 +40,10 @@ function Login() {
 
   useEffect(()=>{
     
-    if (userData.hasOwnProperty("id")) {
+    if (userData.id) {
       setLoginError(false)
       //console.log("logueo OK")
-      history.push(`/pokemons`)
+      navigate(`/pokemons`);
     }
     if (userData==="login failed") {
       setLoginError(true)
@@ -74,9 +74,10 @@ function Login() {
   }
 
   function handleSignIn (){
-    dispatch(getUserInformation(user, password));
+    if (user==='' || password==='') setLoginError(true)
+    else dispatch(getUserInformation(user, password));
+    
     setFirstClick(true)
-    //console.log("hice click")
   }
   
 
