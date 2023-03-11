@@ -29,7 +29,7 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
   const [available, setAvailable] = React.useState("Show All");
 
   //STYLES
-  const pokemonTypeStyle = {/* padding: 20, */ height:'3vh'}
+  const pokemonTypeStyle = { height:'3vh' }
 
   //PAGING
   const pokemonsPerPage = 16
