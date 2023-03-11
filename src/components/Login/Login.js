@@ -31,7 +31,7 @@ function Login() {
   const btnStyle = {margin:'8px 0'}
   const textFieldStyle = {margin:'8px 0'}
 
-  const [checked, setChecked] = React.useState([true, false]);
+  const [checked, setChecked] = React.useState(true);
   const [visiblePassword, setVisiblePassword] = React.useState(false)
   const [user, setUser] = React.useState("")
   const [password,setPassword] = React.useState("")
@@ -39,7 +39,6 @@ function Login() {
   const [firtClick, setFirstClick] = React.useState(false)
 
   useEffect(()=>{
-    
     if (userData.id) {
       setLoginError(false)
       //console.log("logueo OK")
@@ -48,16 +47,27 @@ function Login() {
     if (userData==="login failed") {
       setLoginError(true)
       //console.log("logueo MAL")
-    }
-      
+    }      
   },[userData])
 
-  
-  
+  useEffect(()=>{
+    if (checked && user)  localStorage.setItem("User", user);
+    if (!checked)  localStorage.setItem("User", "");
+  },[checked,user])
+
+  useEffect(()=>{
+    if (checked){
+      let savedUser = localStorage.getItem("User");
+      setUser(savedUser)
+      console.log("savedUser:",savedUser)
+    }
+  },[])
+
+
 /********************************************************HANDLERS************************************************************/
 
   const handleChangeCheckBox = (event) => {
-    setChecked([event.target.checked, event.target.checked]);
+    setChecked(event.target.checked);
   };
 
   function handleVisiblePassword (){
@@ -76,7 +86,6 @@ function Login() {
   function handleSignIn (){
     if (user==='' || password==='') setLoginError(true)
     else dispatch(getUserInformation(user, password));
-    
     setFirstClick(true)
   }
   
@@ -90,7 +99,7 @@ function Login() {
               <h2>Sign in</h2>
           </Grid>
           <Grid align="center">
-              <TextField onChange={changeUserHandler} style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
+              <TextField value={user} onChange={changeUserHandler} style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
               <Grid display="flex" justifyContent={"space-between"}>
                   <TextField onChange={changePasswordHandler} style={textFieldStyle} label='Password' placeholder='Enter password' type={visiblePassword ? '' : 'password'} required/>
                   <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" sx={{mr:1.5}}>
@@ -99,7 +108,7 @@ function Login() {
               </Grid>
               <FormControlLabel
                   label="Remember Me"
-                  control={<Checkbox checked={checked[0]} onChange={handleChangeCheckBox} />}
+                  control={<Checkbox checked={checked} onChange={handleChangeCheckBox} />}
               />
               <Button /* type='submit' */ color='primary' variant="contained" style={btnStyle} fullWidth onClick={handleSignIn}>Sign In</Button>
               <Typography style={textFieldStyle}>
