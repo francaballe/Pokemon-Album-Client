@@ -59,7 +59,7 @@ function Login() {
     if (checked){
       let savedUser = localStorage.getItem("User");
       setUser(savedUser)
-      console.log("savedUser:",savedUser)
+      //console.log("savedUser:",savedUser)
     }
   },[])
 

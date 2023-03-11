@@ -15,9 +15,11 @@ import Rating from '@mui/material/Rating';
 import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { spacing } from '@mui/system';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import RarityRating from './RarityRating/RarityRating';
 
 function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
 
@@ -127,9 +129,7 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
           <Box>
             <FormControl sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel id="Pokemon-Type-label-id">Pokemon Type</InputLabel>
-                <Select value={type} label="Pokemon Type" onChange={handleTypeChange}
-                    /* sx={{ width: '100%', alignContent:"center", py:1}} */
-                >
+                <Select value={type} label="Pokemon Type" onChange={handleTypeChange}>
                     {allTypes.map(oneType => 
                     <MenuItem key={oneType.id} value={oneType.name}>
                       <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", /* backgroundColor: "blue", */ width:"100%"}}>
@@ -150,7 +150,15 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
             <FormControl sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel id="Pokemon-Rarity-label-id">Pokemon Rarity</InputLabel>
                 <Select value={rarity} label="Pokemon Rarity" onChange={handleRarityChange}>
-                    {pokemonRarities.map(oneType => <MenuItem key={oneType} value={oneType}>{oneType}</MenuItem>)}
+                    {pokemonRarities.map((oneRarity,indice) => 
+                    <MenuItem key={oneRarity} value={oneRarity}>
+                    <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", width:"100%"}}>
+                        {oneRarity}
+                        <Box sx={{display: "flex", justifyItems:"center", ml:"10px"}}>
+                            <RarityRating index={indice}/>                            
+                        </Box>
+                      </Box>
+                    </MenuItem>)}
                 </Select>
             </FormControl>
           </Box>
