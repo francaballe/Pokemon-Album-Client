@@ -17,3 +17,10 @@ export function getUserInformation(id, password){
             payload: response.data
         })}
 }
+
+export function resetUserInformation(){
+    return async function(dispatch){
+        return dispatch({
+            type: "RESET_USER_INFO",
+        })}
+}

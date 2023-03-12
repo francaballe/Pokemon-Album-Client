@@ -14,7 +14,13 @@ import { useNavigate } from 'react-router-dom';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Stack from '@mui/material/Stack';
 import ReCAPTCHA from "react-google-recaptcha";
+import IconButton from '@mui/material/IconButton';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import FaceIcon from '@mui/icons-material/Face';
 
+
+const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
 
 //I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
 //in both places. Otherwise, I would've have to use the one in APP and use a hook here
@@ -23,6 +29,9 @@ const theme = createTheme();
 export default function SignUp() {
 
   const navigate = useNavigate();
+  const [visiblePassword, setVisiblePassword] = React.useState(false)
+
+  /********************************************************HANDLERS************************************************************/
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -37,11 +46,18 @@ export default function SignUp() {
     console.log("Captcha value:", value);
   }
 
-  
-
   function handleSignIn (){
     navigate("/")
   }
+
+  function handleVisiblePassword (){
+    if (visiblePassword) setVisiblePassword(false)
+    else setVisiblePassword(true)
+  }
+
+  
+  /****************************************************************************************************************************/
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -94,16 +110,19 @@ export default function SignUp() {
                   autoComplete="email"
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} display="flex" justifyContent={"space-between"}>
                 <TextField
                   required
                   fullWidth
                   name="password"
                   label="Password"
-                  type="password"
                   id="password"
                   autoComplete="new-password"
+                  type={visiblePassword ? '' : 'password'}
                 />
+                <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" /* sx={{mr:0}} */>
+                      {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>} 
+                  </IconButton>
               </Grid>
               <Grid item xs={12}>
                 <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
@@ -111,12 +130,16 @@ export default function SignUp() {
                         Upload Photo
                         <input hidden accept="image/*" multiple type="file" />
                     </Button>
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
+                        <FaceIcon />
+                    </Avatar>
+                    {/* <Avatar sx={{ m: 1, bgcolor: 'primary.main' }} alt="Fran Caballe" src="https://lh3.googleusercontent.com/a/AEdFTp4ZPkTIpErD9-qFEIOBSUOctOhWjTVlq9wgyJ5lXw=s96-c" /> */}
                 </Stack>
               </Grid>
 
               <Grid item xs={12}>
                   <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
-                      <ReCAPTCHA sitekey="6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T" onChange={handleCaptcha}/>
+                      <ReCAPTCHA sitekey={CAPTCHAKEY} onChange={handleCaptcha}/>
                   </Stack>
               </Grid>
 

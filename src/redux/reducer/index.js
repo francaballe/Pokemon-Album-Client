@@ -18,6 +18,12 @@ const initialState = {
             loggedInUser: action.payload
           }
 
+        case "RESET_USER_INFO":
+          return {
+            ...state,
+            loggedInUser: {}
+          }
+
         default:
           return {...state};
     };

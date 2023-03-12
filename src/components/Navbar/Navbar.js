@@ -18,26 +18,35 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import SearchAppBar from '../Navbar/SearchAppBar/SearchAppBar';
+import { useSelector } from 'react-redux';
+import { useDispatch } from "react-redux";
+import { resetUserInformation } from "../../redux/actions/index";
+
 
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar({setDarkLight, onSearch}) {
 
+  const userData = useSelector((state) => state.loggedInUser);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [darkMode,setDarkMode] = React.useState("light")
 
-  function lightDarkClickHandler (){
-    if (darkMode==="light") setDarkMode("dark")
-    else setDarkMode("light")
-  }
 
   //funcion que viene de props
   React.useEffect(()=>{
     setDarkLight(darkMode)
   },[darkMode])
-  
+
+
+/********************************************************HANDLERS************************************************************/
+
+  function lightDarkClickHandler (){
+    if (darkMode==="light") setDarkMode("dark")
+    else setDarkMode("light")
+  }
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -47,9 +56,19 @@ function Navbar({setDarkLight, onSearch}) {
     setAnchorElUser(null);
   };
 
+  function handleSelectedUserMenuOption (setting){
+    //console.log("hice click aca, ahora si:",setting)
+    if (setting==="Logout") {
+      dispatch(resetUserInformation());
+    }
+    setAnchorElUser(null);
+  }
+
   function handleBackToMain (){
     navigate(`/pokemons`);
   }
+
+  /****************************************************************************************************************************/
 
 
   return (
@@ -101,7 +120,7 @@ function Navbar({setDarkLight, onSearch}) {
 
           <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
-                <Avatar alt="Fran Caballe" src="https://lh3.googleusercontent.com/a/AEdFTp4ZPkTIpErD9-qFEIOBSUOctOhWjTVlq9wgyJ5lXw=s96-c" />
+                <Avatar alt="Fran Caballe" src={userData.picture? userData.picture : " "} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -121,8 +140,8 @@ function Navbar({setDarkLight, onSearch}) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting} onClick={()=>handleSelectedUserMenuOption(setting)}>
+                    <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>
