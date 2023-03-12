@@ -36,7 +36,7 @@ function Login() {
   const [user, setUser] = React.useState("")
   const [password,setPassword] = React.useState("")
   const [loginError, setLoginError] = React.useState(undefined)
-  const [firtClick, setFirstClick] = React.useState(false)
+  const [firstClick, setFirstClick] = React.useState(false)
 
   useEffect(()=>{
     if (userData.id) {
@@ -89,6 +89,9 @@ function Login() {
     setFirstClick(true)
   }
   
+  function handleSignUp (){
+    navigate(`/signup`)
+  }
 
   return (
     <Box style={mainContainerStyle}>
@@ -111,22 +114,25 @@ function Login() {
                   control={<Checkbox checked={checked} onChange={handleChangeCheckBox} />}
               />
               <Button /* type='submit' */ color='primary' variant="contained" style={btnStyle} fullWidth onClick={handleSignIn}>Sign In</Button>
+              
               <Typography style={textFieldStyle}>
                 <Link href="#">
                   Forgot Password ?
                 </Link>
               </Typography>
-              <Typography style={textFieldStyle}> Don't have an account yet ?
-                <Link href="#">
-                  {" "}Sign Up
-                </Link>
+
+              <Typography style={textFieldStyle}> Don't have an account yet ?{" "}
+              <Link component="button" variant="body1" onClick={handleSignUp}>
+                  Sign Up
+              </Link>
               </Typography>
-              {(firtClick && loginError) ? 
+
+              {(firstClick && loginError) ? 
                   <Typography color="red">
                     Login Error! Try Again
                   </Typography>
                   :
-                  (firtClick && loginError===false) ?
+                  (firstClick && loginError===false) ?
                   <Typography color="green">
                     Login Success!
                   </Typography>

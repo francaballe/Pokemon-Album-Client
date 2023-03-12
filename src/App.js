@@ -9,6 +9,7 @@ import Login from "../src/components/Login/Login.js";
 import Navbar from "../src/components/Navbar/Navbar.js";
 import NotFound from "../src/components/NotFound/NotFound";
 import PokemonDetails from "../src/components/PokemonDetails/PokemonDetails";
+import SignUp from "../src/components/SignUp/SignUp";
 
 
 function App() {
@@ -76,6 +77,7 @@ function App() {
  
     <Routes>
           <Route path="/" element={<Login/>}></Route>
+          <Route path="/signup" element={<SignUp/>}></Route>
           <Route element={<AuthGuard/>}>
               <Route element={<Navbar setDarkLight={setDarkLight} onSearch={onSearch}/>}>
                   <Route path="/pokemons" element={<AllPokemonsComponent allTypes={allTypes} allPokemons={allPokemons} darkMode={darkMode} nameFilter={nameFilter}/>}/>

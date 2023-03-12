@@ -37,7 +37,6 @@ function PokemonDetails({ darkMode }) {
   async function fetchData (){
     const respuesta = await axios.get(`http://localhost:3001/pokemons/${pokemonId}`)
     if (respuesta) setSelectedPokemon(respuesta.data)
-    /* if (respuesta) console.log(respuesta.data) */
   }
 
   useEffect(()=>{
