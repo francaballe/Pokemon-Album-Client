@@ -15,11 +15,12 @@ import Rating from '@mui/material/Rating';
 import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { spacing } from '@mui/system';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import RarityRating from './RarityRating/RarityRating';
+import NoMatch from "../AllPokemonsComponent/NoMatch/NoMatch";
+
 
 function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
 
@@ -78,14 +79,8 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
   const pokemonsTotalPages = Math.ceil(filteredBySearch.length / pokemonsPerPage)
   const pokemonsToShow = filteredBySearch.slice((pokemonsPerPage*page)-pokemonsPerPage,pokemonsPerPage*page)
   
-
-  /* const pokemonTypes = ["Any Type","Normal","Fighting","Flying","Poison","Ground","Rock","Bug","Ghost","Steel","Fire",
-  "Water","Grass","Electric","Psychic","Ice","Dragon","Dark","Fairy"] */
-
   const pokemonRarities = ["Any Rarity","Common","Uncommon","Rare","Epic","Legendary"]
-
   const pokemonOrders = ["No Order","Name (A-Z)", "Name (Z-A)", "Rarity (Uncommon to Legendary)","Rarity (Legendary to Uncommon)"]
-
   const pokemonInventory = ["Show All","Only Available Pokemons","Missing Pokemons"]
 
 
@@ -188,6 +183,7 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
       
       <main>
               
+        {filteredBySearch.length ?
         <Container maxWidth="xl" sx={{ py: 8 }}>
           <Grid container spacing={5}>
             {pokemonsToShow.map((card) => (
@@ -245,6 +241,8 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
             ))}
           </Grid>
         </Container>
+        :
+        <NoMatch/>}
       </main>
       
       </div>  

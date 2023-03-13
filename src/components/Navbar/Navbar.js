@@ -24,7 +24,7 @@ import { resetUserInformation } from "../../redux/actions/index";
 
 
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = [/* 'Profile', 'Account', 'Dashboard',  */'Logout'];
 
 function Navbar({setDarkLight, onSearch}) {
 

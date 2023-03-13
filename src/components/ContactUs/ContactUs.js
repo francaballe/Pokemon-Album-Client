@@ -23,15 +23,11 @@ import Tooltip from '@mui/material/Tooltip';
 import Swal from "sweetalert2";
 
 
-const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
-const CLOUDINARY_CLOUDNAME = "dqnpgchkn"
-const CLOUDINARY_UPLOAD_PRESET = "xnxpphbf"
-
 //I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
 //in both places. Otherwise, I would've have to use the one in APP and use a hook here
 const theme = createTheme();
 
-export default function SignUp() {
+export default function ContactUs() {
 
   const navigate = useNavigate();
   const [visiblePassword, setVisiblePassword] = React.useState(false)
@@ -55,7 +51,7 @@ export default function SignUp() {
         
         let response = null
         if (cloudinaryData){
-          response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
+          //response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
         }
 
 
@@ -68,33 +64,14 @@ export default function SignUp() {
         }
         //console.log("soy newData:",newData)
 
-        try{
-          const createUser = await axios.post(`http://localhost:3001/users`, newData)
-          if (createUser.data && createUser.data==="User Created OK"){
-            Swal.fire({
-              title:"New User Created!",
-              text:'A new user has just been created',
-              icon:'success',
-              timer: 2000
-            })
-            navigate("/");
-          }
-          if (createUser.data && createUser.data==="User already exists"){
-            Swal.fire({
-              title:"Error when creating this new user!",
-              text:"It seems the user Email you have chosen is within our DataBase already. Try a different one!",
-              icon:'error',
-              timer: 4000
-            })
-          }
-        }catch(e){
-          Swal.fire({
-            title:"Error when creating this new user!",
-            text:"An error occurred while creating your User. Try Again!",
-            icon:'error',
-            timer: 4000
-          })
-        }
+        //const createUser = await axios.post(`http://localhost:3001/users`, newData)
+        Swal.fire({
+          title:"New User Created!",
+          text:'A new user has just been created',
+          icon:'success',
+          timer: 2000
+        })
+        navigate("/");
     };
 
   function handleSignIn (){
