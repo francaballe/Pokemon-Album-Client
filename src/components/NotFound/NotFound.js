@@ -10,11 +10,12 @@ function NotFound() {
         alignItems: "center",
         ml: "auto",
         mr: "auto",
-        width: "20%"  
+        width: "20%",
+        pt: "10%"  
     }}>
       <CardMedia 
         component="img"
-        image={"https://res.cloudinary.com/dqnpgchkn/image/upload/c_scale,h_128,w_128/v1678473311/Pokemon-Icons/AllTypes_fb6pbn.svg"}
+        image={"https://res.cloudinary.com/dqnpgchkn/image/upload/v1678730045/Pokemons%20Album/AllTypes_xrdqg4.svg"}
         alt="type image"
       />
       <h1>Page Not Found!</h1>

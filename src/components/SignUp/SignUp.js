@@ -1,25 +1,26 @@
+import FaceIcon from '@mui/icons-material/Face';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import axios from "axios";
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import Stack from '@mui/material/Stack';
 import ReCAPTCHA from "react-google-recaptcha";
-import IconButton from '@mui/material/IconButton';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import FaceIcon from '@mui/icons-material/Face';
-//import { Cloudinary } from "@cloudinary/url-gen";
-import axios from "axios"
+import { useNavigate } from 'react-router-dom';
+import Tooltip from '@mui/material/Tooltip';
+import Swal from "sweetalert2";
 
 
 const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
@@ -36,7 +37,14 @@ export default function SignUp() {
   const [visiblePassword, setVisiblePassword] = React.useState(false)
   const [selectedPicture,setSelectedPicture] = React.useState(undefined)
   const [cloudinaryData, setCloudinaryData] = React.useState(undefined)
-
+  const [disableSubmit, setDisableSubmit] = React.useState(true)
+  const [error, setError] = React.useState({
+    captcha: true,
+    name: true,
+    lastname: true,
+    email: true,
+    password: true
+  })
 
 
   /********************************************************HANDLERS************************************************************/
@@ -45,20 +53,30 @@ export default function SignUp() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         
+        let response = null
         if (cloudinaryData){
-          const response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
-          //console.log("url:",response.data.secure_url)//This is the image URL returned by cloudinary
+          response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
         }
-        
-        /* console.log({
-          email: data.get('email'),
-          password: data.get('password'),
-        }); */
-    };
 
-  function handleCaptcha(value) {
-    console.log("Captcha value:", value);
-  }
+
+        const newData = {
+          id: data.get('email'),
+          name: data.get('firstName'),
+          lastname: data.get('lastName'),
+          password: data.get('password'),
+          picture: response ? response.data.secure_url : ""
+        }
+        //console.log("soy newData:",newData)
+
+        const createUser = await axios.post(`http://localhost:3001/users`, newData)
+        Swal.fire({
+          title:"New User Created!",
+          text:'A new user has just been created',
+          icon:'success',
+          timer: 2000
+        })
+        navigate("/");
+    };
 
   function handleSignIn (){
     navigate("/")
@@ -77,10 +95,45 @@ export default function SignUp() {
         setCloudinaryData(data);
         setSelectedPicture(URL.createObjectURL(files[0]))
   }
+
+  function changeCaptchaHandler (value) {
+    if (value)  setError({ ...error, captcha: false })
+    else  setError({ ...error, captcha: true })
+  }
+
+  function changeNameHandler (event){
+    if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, name: true })
+    else  setError({ ...error, name: false })
+  }
+
+  function changeLastNameHandler (event){
+    if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, lastname: true })
+    else  setError({ ...error, lastname: false })
+  }
  
+  function changeEmailHandler (event){
+    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(event.target.value))  setError({ ...error, email: true })
+    else  setError({ ...error, email: false })
+  }
+
+  function changePasswordHandler (event){
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{6,10}$/u.test(event.target.value))
+      setError({ ...error, password: true })
+    else  setError({ ...error, password: false })
+  }
+
   
   /****************************************************************************************************************************/
 
+  React.useEffect(() => {
+    if (!error.name &&
+        !error.lastname &&
+        !error.email &&
+        !error.password &&
+        !error.captcha
+    ) setDisableSubmit(false);
+    else  setDisableSubmit(true);
+  }, [error])
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,46 +156,62 @@ export default function SignUp() {
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
+                <Tooltip title="It should start with a capital letter" placement="top-start">
+                  <TextField
+                    autoComplete="given-name"
+                    name="firstName"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    autoFocus
+                    onChange={changeNameHandler}
+                    sx={error.name ? { input: { color: 'red' } } : null}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
+                <Tooltip title="It should start with a capital letter" placement="top-start">
+                  <TextField
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="family-name"
+                    onChange={changeLastNameHandler}
+                    sx={error.lastname ? { input: { color: 'red' } } : null}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
+                <Tooltip title="It should be a valid Email" placement="top-start">
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    onChange={changeEmailHandler}
+                    sx={error.email ? { input: { color: 'red' } } : null}
+                  />
+                </Tooltip>
               </Grid>
               <Grid item xs={12} display="flex" justifyContent={"space-between"}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  id="password"
-                  autoComplete="new-password"
-                  type={visiblePassword ? '' : 'password'}
-                />
+                <Tooltip title="Min 6, max 10 chars. At least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character" placement="top-start">
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    id="password"
+                    autoComplete="new-password"
+                    type={visiblePassword ? '' : 'password'}
+                    onChange={changePasswordHandler}
+                    sx={error.password ? { input: { color: 'red' } } : null}
+                  />
+                </Tooltip>
                 <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" /* sx={{mr:0}} */>
                       {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>} 
                   </IconButton>
@@ -164,20 +233,16 @@ export default function SignUp() {
 
               <Grid item xs={12}>
                   <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
-                      <ReCAPTCHA sitekey={CAPTCHAKEY} onChange={handleCaptcha}/>
+                      <ReCAPTCHA sitekey={CAPTCHAKEY} onChange={changeCaptchaHandler}/>
                   </Stack>
               </Grid>
 
             </Grid>
             
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" fullWidth variant="contained" disabled={disableSubmit} sx={{ mt: 3, mb: 2 }}>
               Sign Up
             </Button>
+
             <Grid container justifyContent="center">
               <Grid>
                   <Typography> Already have an account? {" "}
