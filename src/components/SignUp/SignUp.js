@@ -18,9 +18,13 @@ import IconButton from '@mui/material/IconButton';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import FaceIcon from '@mui/icons-material/Face';
+//import { Cloudinary } from "@cloudinary/url-gen";
+import axios from "axios"
 
 
 const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
+const CLOUDINARY_CLOUDNAME = "dqnpgchkn"
+const CLOUDINARY_UPLOAD_PRESET = "xnxpphbf"
 
 //I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
 //in both places. Otherwise, I would've have to use the one in APP and use a hook here
@@ -30,17 +34,27 @@ export default function SignUp() {
 
   const navigate = useNavigate();
   const [visiblePassword, setVisiblePassword] = React.useState(false)
+  const [selectedPicture,setSelectedPicture] = React.useState(undefined)
+  const [cloudinaryData, setCloudinaryData] = React.useState(undefined)
+
+
 
   /********************************************************HANDLERS************************************************************/
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    /* console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    }); */
-  };
+    async function handleSubmit (event) {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        
+        if (cloudinaryData){
+          const response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
+          //console.log("url:",response.data.secure_url)//This is the image URL returned by cloudinary
+        }
+        
+        /* console.log({
+          email: data.get('email'),
+          password: data.get('password'),
+        }); */
+    };
 
   function handleCaptcha(value) {
     console.log("Captcha value:", value);
@@ -55,6 +69,15 @@ export default function SignUp() {
     else setVisiblePassword(true)
   }
 
+  const handleSelectedImage = async (e) => {
+        const files = e.target.files
+        const data = new FormData();
+        data.append("file", files[0]);
+        data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);//data cloudinary
+        setCloudinaryData(data);
+        setSelectedPicture(URL.createObjectURL(files[0]))
+  }
+ 
   
   /****************************************************************************************************************************/
 
@@ -128,12 +151,14 @@ export default function SignUp() {
                 <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
                     <Button variant="contained" component="label" endIcon={<PhotoCamera/>}>
                         Upload Photo
-                        <input hidden accept="image/*" multiple type="file" />
+                        <input hidden accept="image/*" multiple type="file" onChange={handleSelectedImage}/>
                     </Button>
-                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-                        <FaceIcon />
-                    </Avatar>
-                    {/* <Avatar sx={{ m: 1, bgcolor: 'primary.main' }} alt="Fran Caballe" src="https://lh3.googleusercontent.com/a/AEdFTp4ZPkTIpErD9-qFEIOBSUOctOhWjTVlq9wgyJ5lXw=s96-c" /> */}
+
+                    {selectedPicture ? 
+                    <Avatar src={selectedPicture} sx={{ m: 1, bgcolor: 'primary.main' }}></Avatar>
+                    : 
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}><FaceIcon /></Avatar>}                    
+
                 </Stack>
               </Grid>
 
