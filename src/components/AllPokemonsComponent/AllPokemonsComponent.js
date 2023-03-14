@@ -88,6 +88,7 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
 
   function handleTypeChange (event){
     setType(event.target.value)
+    setPage(1)
   }
 
   function handleRarityChange (event){
@@ -97,10 +98,12 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
 
   function handleOrderChange (event){
     setOrder(event.target.value)
+    setPage(1)
   }
 
   function handleInventoryChange (event){
     setAvailable(event.target.value)
+    setPage(1)
   }
 
   function handlePageChange (event, value){

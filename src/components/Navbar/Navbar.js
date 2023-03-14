@@ -68,6 +68,10 @@ function Navbar({setDarkLight, onSearch}) {
     navigate(`/pokemons`);
   }
 
+  function contactUsHandler (){
+    navigate(`/contactus`);
+  }
+
   /****************************************************************************************************************************/
 
 
@@ -91,7 +95,7 @@ function Navbar({setDarkLight, onSearch}) {
           </Tooltip>
 
           <Tooltip title="Report any issues or leave a nice comment" sx={{mr:30}}>
-              <Button variant="contained" startIcon={<ContactMailIcon/>}
+              <Button variant="contained" startIcon={<ContactMailIcon/>} onClick={contactUsHandler}
                 color='secondary'>Contact Us
               </Button>
           </Tooltip>    

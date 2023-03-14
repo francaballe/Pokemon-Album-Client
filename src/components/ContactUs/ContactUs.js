@@ -30,28 +30,28 @@ const theme = createTheme();
 export default function ContactUs() {
 
   const navigate = useNavigate();
-  const [visiblePassword, setVisiblePassword] = React.useState(false)
-  const [selectedPicture,setSelectedPicture] = React.useState(undefined)
-  const [cloudinaryData, setCloudinaryData] = React.useState(undefined)
+  //const [visiblePassword, setVisiblePassword] = React.useState(false)
+  //const [selectedPicture,setSelectedPicture] = React.useState(undefined)
+  //const [cloudinaryData, setCloudinaryData] = React.useState(undefined)
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-  const [error, setError] = React.useState({
+  /* const [error, setError] = React.useState({
     captcha: true,
     name: true,
     lastname: true,
     email: true,
     password: true
-  })
+  }) */
 
 
   /********************************************************HANDLERS************************************************************/
 
     async function handleSubmit (event) {
-        event.preventDefault();
+        /* event.preventDefault();
         const data = new FormData(event.currentTarget);
         
         let response = null
         if (cloudinaryData){
-          //response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
+          response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
         }
 
 
@@ -62,66 +62,66 @@ export default function ContactUs() {
           password: data.get('password'),
           picture: response ? response.data.secure_url : ""
         }
-        //console.log("soy newData:",newData)
+        
 
-        //const createUser = await axios.post(`http://localhost:3001/users`, newData)
+        const createUser = await axios.post(`http://localhost:3001/users`, newData)
         Swal.fire({
           title:"New User Created!",
           text:'A new user has just been created',
           icon:'success',
           timer: 2000
         })
-        navigate("/");
+        navigate("/"); */
     };
 
   function handleSignIn (){
-    navigate("/")
+    //navigate("/")
   }
 
   function handleVisiblePassword (){
-    if (visiblePassword) setVisiblePassword(false)
-    else setVisiblePassword(true)
+    /* if (visiblePassword) setVisiblePassword(false)
+    else setVisiblePassword(true) */
   }
 
   const handleSelectedImage = async (e) => {
-        const files = e.target.files
+        /* const files = e.target.files
         const data = new FormData();
         data.append("file", files[0]);
         data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);//data cloudinary
         setCloudinaryData(data);
-        setSelectedPicture(URL.createObjectURL(files[0]))
+        setSelectedPicture(URL.createObjectURL(files[0])) */
   }
 
   function changeCaptchaHandler (value) {
-    if (value)  setError({ ...error, captcha: false })
-    else  setError({ ...error, captcha: true })
+    /* if (value)  setError({ ...error, captcha: false })
+    else  setError({ ...error, captcha: true }) */
   }
 
   function changeNameHandler (event){
-    if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, name: true })
-    else  setError({ ...error, name: false })
+    /* if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, name: true })
+    else  setError({ ...error, name: false }) */
   }
 
   function changeLastNameHandler (event){
-    if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, lastname: true })
-    else  setError({ ...error, lastname: false })
+    /* if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, lastname: true })
+    else  setError({ ...error, lastname: false }) */
   }
  
   function changeEmailHandler (event){
-    if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(event.target.value))  setError({ ...error, email: true })
-    else  setError({ ...error, email: false })
+    /* if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(event.target.value))  setError({ ...error, email: true })
+    else  setError({ ...error, email: false }) */
   }
 
   function changePasswordHandler (event){
-    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{6,10}$/u.test(event.target.value))
+    /* if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{6,10}$/u.test(event.target.value))
       setError({ ...error, password: true })
-    else  setError({ ...error, password: false })
+    else  setError({ ...error, password: false }) */
   }
 
   
   /****************************************************************************************************************************/
 
-  React.useEffect(() => {
+  /* React.useEffect(() => {
     if (!error.name &&
         !error.lastname &&
         !error.email &&
@@ -129,7 +129,7 @@ export default function ContactUs() {
         !error.captcha
     ) setDisableSubmit(false);
     else  setDisableSubmit(true);
-  }, [error])
+  }, [error]) */
 
   return (
     <ThemeProvider theme={theme}>
@@ -162,7 +162,7 @@ export default function ContactUs() {
                     label="First Name"
                     autoFocus
                     onChange={changeNameHandler}
-                    sx={error.name ? { input: { color: 'red' } } : null}
+                    /* sx={error.name ? { input: { color: 'red' } } : null} */
                   />
                 </Tooltip>
               </Grid>
@@ -176,7 +176,7 @@ export default function ContactUs() {
                     name="lastName"
                     autoComplete="family-name"
                     onChange={changeLastNameHandler}
-                    sx={error.lastname ? { input: { color: 'red' } } : null}
+                    /* sx={error.lastname ? { input: { color: 'red' } } : null} */
                   />
                 </Tooltip>
               </Grid>
@@ -190,7 +190,7 @@ export default function ContactUs() {
                     name="email"
                     autoComplete="email"
                     onChange={changeEmailHandler}
-                    sx={error.email ? { input: { color: 'red' } } : null}
+                    /* sx={error.email ? { input: { color: 'red' } } : null} */
                   />
                 </Tooltip>
               </Grid>
@@ -203,13 +203,13 @@ export default function ContactUs() {
                     label="Password"
                     id="password"
                     autoComplete="new-password"
-                    type={visiblePassword ? '' : 'password'}
+                    /* type={visiblePassword ? '' : 'password'} */
                     onChange={changePasswordHandler}
-                    sx={error.password ? { input: { color: 'red' } } : null}
+                    /* sx={error.password ? { input: { color: 'red' } } : null} */
                   />
                 </Tooltip>
                 <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" /* sx={{mr:0}} */>
-                      {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>} 
+                      {/* {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}  */}
                   </IconButton>
               </Grid>
               <Grid item xs={12}>
@@ -219,17 +219,17 @@ export default function ContactUs() {
                         <input hidden accept="image/*" multiple type="file" onChange={handleSelectedImage}/>
                     </Button>
 
-                    {selectedPicture ? 
+                    {/* {selectedPicture ? 
                     <Avatar src={selectedPicture} sx={{ m: 1, bgcolor: 'primary.main' }}></Avatar>
                     : 
-                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}><FaceIcon /></Avatar>}                    
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}><FaceIcon /></Avatar>}    */}                 
 
                 </Stack>
               </Grid>
 
               <Grid item xs={12}>
                   <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
-                      <ReCAPTCHA sitekey={CAPTCHAKEY} onChange={changeCaptchaHandler}/>
+                      {/* <ReCAPTCHA sitekey={CAPTCHAKEY} onChange={changeCaptchaHandler}/> */}
                   </Stack>
               </Grid>
 

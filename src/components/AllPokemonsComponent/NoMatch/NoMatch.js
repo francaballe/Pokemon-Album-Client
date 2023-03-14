@@ -15,7 +15,7 @@ function NoMatch() {
     }}>
       <CardMedia 
         component="img"
-        image={"https://res.cloudinary.com/dqnpgchkn/image/upload/v1678736743/Pokemons%20Album/Psyduck_je8odq.png"}
+        image={"https://res.cloudinary.com/dqnpgchkn/image/upload/v1678762228/Pokemons%20Album/Psyduck-removebg-preview_rp2bpu.png"}
         alt="type image"
       />
       <h1>No Matching Pokemon!</h1>

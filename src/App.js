@@ -10,6 +10,7 @@ import Navbar from "../src/components/Navbar/Navbar.js";
 import NotFound from "../src/components/NotFound/NotFound";
 import PokemonDetails from "../src/components/PokemonDetails/PokemonDetails";
 import SignUp from "../src/components/SignUp/SignUp";
+import ContactUs from "../src/components/ContactUs/ContactUs";
 
 
 function App() {
@@ -82,6 +83,7 @@ function App() {
               <Route element={<Navbar setDarkLight={setDarkLight} onSearch={onSearch}/>}>
                   <Route path="/pokemons" element={<AllPokemonsComponent allTypes={allTypes} allPokemons={allPokemons} darkMode={darkMode} nameFilter={nameFilter}/>}/>
                   <Route path="/pokemons/:pokemonId" element={<PokemonDetails darkMode={darkMode}/>}/>
+                  <Route path="/contactus" element={<ContactUs darkMode={darkMode}/>}/>
               </Route>
           </Route>
           <Route path="*" element={<NotFound/>}></Route>          
