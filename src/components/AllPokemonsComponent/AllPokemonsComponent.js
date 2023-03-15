@@ -196,7 +196,7 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
                   sx={{ py:1, px:1, height: '100%', display: 'flex', 
                   flexDirection: 'column', border: 5, borderRadius: 10,
                   opacity: userData.pokemons && userData.pokemons.includes(card.id) ? '100%' : '10%',
-                  borderColor: card.stars===5 ? 'legendary.main' : 
+                  borderColor:  card.stars===5 ? 'legendary.main' : 
                                 card.stars===4 ? 'epic.main' : 
                                 card.stars===3 ? 'rare.main' : 
                                 card.stars===2 ? 'uncommon.light' : 
@@ -214,14 +214,18 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
                               '10px 5px 5px grey'
                     }}
                 >
-                  <CardMedia
-                    component="img"
-                    sx={{
-                      pt: '20%'
-                    }}
-                    image={card.image}
-                    alt="pokemon"
-                  />
+                  <Box m={1} p={1} display="flex" justifyContent="center">
+                    <CardMedia
+                      component="img"
+                      sx={{
+                        height: '100px',
+                        width: '130px',
+                        objectFit: 'contain'
+                      }}
+                      image={card.image}
+                      alt="pokemon"
+                    />
+                  </Box>
 
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography align="center" gutterBottom variant="h6" component="h2">

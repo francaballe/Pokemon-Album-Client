@@ -1,8 +1,6 @@
 import FaceIcon from '@mui/icons-material/Face';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -11,16 +9,16 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from "axios";
 import * as React from 'react';
-import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router-dom';
-import Tooltip from '@mui/material/Tooltip';
 import Swal from "sweetalert2";
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import { useSelector } from 'react-redux';
+import Tooltip from '@mui/material/Tooltip';
 
 
 //I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
@@ -29,25 +27,31 @@ const theme = createTheme();
 
 export default function ContactUs() {
 
+  const userData = useSelector((state) => state.loggedInUser);
   const navigate = useNavigate();
-  //const [visiblePassword, setVisiblePassword] = React.useState(false)
-  //const [selectedPicture,setSelectedPicture] = React.useState(undefined)
-  //const [cloudinaryData, setCloudinaryData] = React.useState(undefined)
   const [disableSubmit, setDisableSubmit] = React.useState(true)
-  /* const [error, setError] = React.useState({
-    captcha: true,
-    name: true,
-    lastname: true,
-    email: true,
-    password: true
-  }) */
 
+  const [error, setError] = React.useState({
+    phone: true,
+    message: true
+  })
+
+  const [data, setData] = React.useState({
+    phone: "",
+    message: ""
+  })
+
+  /* React.useEffect(()=>{
+    if (userData.id) console.log(userData)    
+  },[userData])
+ */
 
   /********************************************************HANDLERS************************************************************/
 
     async function handleSubmit (event) {
-        /* event.preventDefault();
-        const data = new FormData(event.currentTarget);
+      console.log("le di al submit")
+         event.preventDefault();
+        /*const data = new FormData(event.currentTarget);
         
         let response = null
         if (cloudinaryData){
@@ -74,62 +78,32 @@ export default function ContactUs() {
         navigate("/"); */
     };
 
-  function handleSignIn (){
-    //navigate("/")
-  }
-
-  function handleVisiblePassword (){
-    /* if (visiblePassword) setVisiblePassword(false)
-    else setVisiblePassword(true) */
-  }
-
-  const handleSelectedImage = async (e) => {
-        /* const files = e.target.files
-        const data = new FormData();
-        data.append("file", files[0]);
-        data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);//data cloudinary
-        setCloudinaryData(data);
-        setSelectedPicture(URL.createObjectURL(files[0])) */
-  }
-
-  function changeCaptchaHandler (value) {
-    /* if (value)  setError({ ...error, captcha: false })
-    else  setError({ ...error, captcha: true }) */
-  }
-
-  function changeNameHandler (event){
-    /* if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, name: true })
-    else  setError({ ...error, name: false }) */
-  }
-
-  function changeLastNameHandler (event){
-    /* if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, lastname: true })
-    else  setError({ ...error, lastname: false }) */
-  }
  
-  function changeEmailHandler (event){
-    /* if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(event.target.value))  setError({ ...error, email: true })
-    else  setError({ ...error, email: false }) */
+  function changeMessageHandler (event){
+    setData({...data, message:event.target.value})
+    if (event.target.value.length<10) setError({ ...error, message: true })
+    else  setError({ ...error, message: false })
   }
 
-  function changePasswordHandler (event){
-    /* if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{6,10}$/u.test(event.target.value))
-      setError({ ...error, password: true })
-    else  setError({ ...error, password: false }) */
+  function changePhoneHandler (event){
+    setData({...data, phone:event.target.value})
+    if (!/^[ 0-9+-]+$/.test(event.target.value))  setError({ ...error, phone: true })
+    else  setError({ ...error, phone: false })
+  }
+
+  function handleGoBack (event){
+    navigate("/pokemons")
   }
 
   
   /****************************************************************************************************************************/
-
-  /* React.useEffect(() => {
-    if (!error.name &&
-        !error.lastname &&
-        !error.email &&
-        !error.password &&
-        !error.captcha
+  
+  React.useEffect(() => {
+    if (!error.message &&
+        !error.phone
     ) setDisableSubmit(false);
     else  setDisableSubmit(true);
-  }, [error]) */
+  }, [error])
 
   return (
     <ThemeProvider theme={theme}>
@@ -144,106 +118,85 @@ export default function ContactUs() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-            <LockOutlinedIcon />
+            <BorderColorOutlinedIcon/>
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Contact Us
           </Typography>
+          (Us? It's only Me, the developer!)
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
-                <Tooltip title="It should start with a capital letter" placement="top-start">
                   <TextField
-                    autoComplete="given-name"
                     name="firstName"
-                    required
                     fullWidth
                     id="firstName"
-                    label="First Name"
-                    autoFocus
-                    onChange={changeNameHandler}
-                    /* sx={error.name ? { input: { color: 'red' } } : null} */
+                    value={userData.name}
+                    disabled
                   />
-                </Tooltip>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Tooltip title="It should start with a capital letter" placement="top-start">
                   <TextField
-                    required
+                    name="lastName"
                     fullWidth
                     id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="family-name"
-                    onChange={changeLastNameHandler}
-                    /* sx={error.lastname ? { input: { color: 'red' } } : null} */
+                    value={userData.lastname}
+                    disabled
                   />
-                </Tooltip>
               </Grid>
               <Grid item xs={12}>
-                <Tooltip title="It should be a valid Email" placement="top-start">
                   <TextField
-                    required
+                    name="email"
                     fullWidth
                     id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    onChange={changeEmailHandler}
-                    /* sx={error.email ? { input: { color: 'red' } } : null} */
+                    value={userData.id}
+                    disabled
                   />
-                </Tooltip>
               </Grid>
               <Grid item xs={12} display="flex" justifyContent={"space-between"}>
-                <Tooltip title="Min 6, max 10 chars. At least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character" placement="top-start">
+                <Tooltip title="Only numbers, - and + characters are allowed" placement="top-start">
                   <TextField
-                    required
                     fullWidth
-                    name="password"
-                    label="Password"
-                    id="password"
-                    autoComplete="new-password"
-                    /* type={visiblePassword ? '' : 'password'} */
-                    onChange={changePasswordHandler}
-                    /* sx={error.password ? { input: { color: 'red' } } : null} */
+                    name="phone"
+                    label="Phone Number"
+                    id="phone"
+                    autoComplete="tel"
+                    onChange={changePhoneHandler}
+                    value={data.phone}
+                    sx={error.phone ? { input: { color: 'red' } } : null}
                   />
                 </Tooltip>
-                <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" /* sx={{mr:0}} */>
-                      {/* {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>}  */}
-                  </IconButton>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
-                    <Button variant="contained" component="label" endIcon={<PhotoCamera/>}>
-                        Upload Photo
-                        <input hidden accept="image/*" multiple type="file" onChange={handleSelectedImage}/>
-                    </Button>
-
-                    {/* {selectedPicture ? 
-                    <Avatar src={selectedPicture} sx={{ m: 1, bgcolor: 'primary.main' }}></Avatar>
-                    : 
-                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}><FaceIcon /></Avatar>}    */}                 
-
-                </Stack>
               </Grid>
 
               <Grid item xs={12}>
-                  <Stack direction="row" alignItems="center" /* spacing={2} */ justifyContent="center">
-                      {/* <ReCAPTCHA sitekey={CAPTCHAKEY} onChange={changeCaptchaHandler}/> */}
-                  </Stack>
+                <Tooltip title="Write whatever you want, but at least 10 characters" placement="top-start">
+                  <TextField
+                    fullWidth
+                    name="message"
+                    label="Write a Message"
+                    id="message"
+                    multiline
+                    rows={4}
+                    onChange={changeMessageHandler}
+                    value={data.message}
+                    /* textareaStyle={styles.textInputInput} */                    
+                    /* sx={{ textareaStyle: { color: 'red' } }} */
+                    /* {error.message ? { input: { color: 'red' } } : null} */
+                  />
+                </Tooltip>
               </Grid>
 
             </Grid>
             
             <Button type="submit" fullWidth variant="contained" disabled={disableSubmit} sx={{ mt: 3, mb: 2 }}>
-              Sign Up
+              Send Message
             </Button>
 
             <Grid container justifyContent="center">
               <Grid>
-                  <Typography> Already have an account? {" "}
-                      <Link component="button" variant="body1" onClick={handleSignIn}>
-                          Sign In
+                  <Typography>
+                      <Link component="button" variant="body1" onClick={handleGoBack}>
+                          Go Back
                       </Link>
                   </Typography>
               </Grid>
