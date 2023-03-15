@@ -15,6 +15,7 @@ import axios from "axios";
 import * as React from 'react';
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
+import CssBaseline from '@mui/material/CssBaseline';
 
 
 const ExpandMore = styled((props) => {
@@ -56,7 +57,9 @@ function PokemonDetails({ darkMode }) {
 
   return (
     
-      
+    <div>
+    <CssBaseline />
+
     <Grid
     container
     spacing={0}
@@ -180,7 +183,7 @@ function PokemonDetails({ darkMode }) {
      
     </Grid>   
   </Grid>  
-    
+    </div>
   );
   
 }

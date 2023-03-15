@@ -22,7 +22,13 @@ const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
 //in both places. Otherwise, I would've have to use the one in APP and use a hook here
 const theme = createTheme();
 
-export default function ContactUs() {
+export default function ContactUs({ darkMode }) {
+
+  const lightTheme = createTheme({
+    palette: {
+      mode:darkMode}
+    })
+
 
   //SENDING EMAIL CONFIGURATION
   const sendEmail = (e) => {
@@ -73,31 +79,6 @@ export default function ContactUs() {
     async function handleSubmit (event) {
          event.preventDefault();
          sendEmail(event);
-        /*const data = new FormData(event.currentTarget);
-        
-        let response = null
-        if (cloudinaryData){
-          response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
-        }
-
-
-        const newData = {
-          id: data.get('email'),
-          name: data.get('firstName'),
-          lastname: data.get('lastName'),
-          password: data.get('password'),
-          picture: response ? response.data.secure_url : ""
-        }
-        
-
-        const createUser = await axios.post(`http://localhost:3001/users`, newData)
-        Swal.fire({
-          title:"New User Created!",
-          text:'A new user has just been created',
-          icon:'success',
-          timer: 2000
-        })
-        */
         navigate("/pokemons")
     };
 
@@ -129,7 +110,7 @@ export default function ContactUs() {
   }, [error])
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={lightTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -207,9 +188,7 @@ export default function ContactUs() {
                     onChange={changeMessageHandler}
                     value={data.message}
                     color={error.message ? "error" : null}
-                    /* textareaStyle={styles.textInputInput} */                    
-                    /* sx={{ textareaStyle: { color: 'red' } }} */
-                    /* {error.message ? { input: { color: 'red' } } : null} */
+                    sx={error.message ? {'& .MuiInputBase-root': {color: 'red'},} : null}
                   />
                 </Tooltip>
               </Grid>
