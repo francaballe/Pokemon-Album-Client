@@ -1,25 +1,22 @@
-import FaceIcon from '@mui/icons-material/Face';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import axios from "axios";
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import Swal from "sweetalert2";
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import { useSelector } from 'react-redux';
 import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import emailjs from '@emailjs/browser';
+import Swal from "sweetalert2";
 
+const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
 
 //I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
 //in both places. Otherwise, I would've have to use the one in APP and use a hook here
@@ -27,18 +24,43 @@ const theme = createTheme();
 
 export default function ContactUs() {
 
+  //SENDING EMAIL CONFIGURATION
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm('service_francaballe_poke', 'template_pokemon_album', e.target, EMAIL_PUBLIC_KEY)
+      .then((/* result */) => {
+        Swal.fire({
+          title:"Message Sent!",
+          text:'A new message has just been sent!',
+          icon:'success',
+          timer: 2000
+        })
+      }, (/* error */) => {
+        Swal.fire({
+          title:"Error when sending email!",
+          text:"Oops, something went wrong!",
+          icon:'error',
+          timer: 4000
+        })
+      });
+      //e.target.reset()
+  };
+
   const userData = useSelector((state) => state.loggedInUser);
   const navigate = useNavigate();
   const [disableSubmit, setDisableSubmit] = React.useState(true)
 
-  const [error, setError] = React.useState({
-    phone: true,
-    message: true
-  })
-
+  //Data States (for controlled form)
   const [data, setData] = React.useState({
     phone: "",
     message: ""
+  })
+  
+  //Error States
+  const [error, setError] = React.useState({
+    phone: true,
+    message: true
   })
 
   /* React.useEffect(()=>{
@@ -49,8 +71,8 @@ export default function ContactUs() {
   /********************************************************HANDLERS************************************************************/
 
     async function handleSubmit (event) {
-      console.log("le di al submit")
          event.preventDefault();
+         sendEmail(event);
         /*const data = new FormData(event.currentTarget);
         
         let response = null
@@ -75,7 +97,8 @@ export default function ContactUs() {
           icon:'success',
           timer: 2000
         })
-        navigate("/"); */
+        */
+        navigate("/pokemons")
     };
 
  
@@ -132,7 +155,8 @@ export default function ContactUs() {
                     fullWidth
                     id="firstName"
                     value={userData.name}
-                    disabled
+                    sx={{ input: { color: 'primary.main' } }}
+                    /* disabled */
                   />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -141,7 +165,8 @@ export default function ContactUs() {
                     fullWidth
                     id="lastName"
                     value={userData.lastname}
-                    disabled
+                    sx={{ input: { color: 'primary.main' } }}
+                    /* disabled */
                   />
               </Grid>
               <Grid item xs={12}>
@@ -150,7 +175,8 @@ export default function ContactUs() {
                     fullWidth
                     id="email"
                     value={userData.id}
-                    disabled
+                    sx={{ input: { color: 'primary.main' } }}
+                    /* disabled */
                   />
               </Grid>
               <Grid item xs={12} display="flex" justifyContent={"space-between"}>
@@ -163,6 +189,7 @@ export default function ContactUs() {
                     autoComplete="tel"
                     onChange={changePhoneHandler}
                     value={data.phone}
+                    color={error.phone ? "error" : null}
                     sx={error.phone ? { input: { color: 'red' } } : null}
                   />
                 </Tooltip>
@@ -179,6 +206,7 @@ export default function ContactUs() {
                     rows={4}
                     onChange={changeMessageHandler}
                     value={data.message}
+                    color={error.message ? "error" : null}
                     /* textareaStyle={styles.textInputInput} */                    
                     /* sx={{ textareaStyle: { color: 'red' } }} */
                     /* {error.message ? { input: { color: 'red' } } : null} */

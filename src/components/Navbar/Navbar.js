@@ -124,7 +124,7 @@ function Navbar({setDarkLight, onSearch}) {
 
           <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 1 }}>
-                <Avatar alt="Fran Caballe" src={userData.picture? userData.picture : " "} />
+                <Avatar alt={userData.name} src={userData.picture? userData.picture : " "} />
               </IconButton>
             </Tooltip>
             <Menu

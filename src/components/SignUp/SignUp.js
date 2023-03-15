@@ -38,6 +38,16 @@ export default function SignUp() {
   const [selectedPicture,setSelectedPicture] = React.useState(undefined)
   const [cloudinaryData, setCloudinaryData] = React.useState(undefined)
   const [disableSubmit, setDisableSubmit] = React.useState(true)
+  
+  //Data States (for controlled form)
+  const [data, setData] = React.useState({
+    name: "",
+    lastname: "",
+    email: "",
+    password: "",
+  })
+  
+  //Error States
   const [error, setError] = React.useState({
     captcha: true,
     name: true,
@@ -51,19 +61,18 @@ export default function SignUp() {
 
     async function handleSubmit (event) {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
+        //const data = new FormData(event.currentTarget);
         
         let response = null
         if (cloudinaryData){
           response = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUDNAME}/image/upload`, cloudinaryData)
         }
 
-
         const newData = {
-          id: data.get('email'),
-          name: data.get('firstName'),
-          lastname: data.get('lastName'),
-          password: data.get('password'),
+          id: data.email,           //data.get('email'),
+          name: data.name,          //data.get('firstName'),
+          lastname: data.lastname,  //data.get('lastName'),
+          password: data.password,  //data.get('password'),
           picture: response ? response.data.secure_url : ""
         }
         //console.log("soy newData:",newData)
@@ -108,11 +117,14 @@ export default function SignUp() {
 
   const handleSelectedImage = async (e) => {
         const files = e.target.files
-        const data = new FormData();
-        data.append("file", files[0]);
-        data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);//data cloudinary
-        setCloudinaryData(data);
-        setSelectedPicture(URL.createObjectURL(files[0]))
+        if (files.length){
+            //console.log("y ahoraa:",files[0])
+            const data = new FormData();
+            data.append("file", files[0]);
+            data.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);//data cloudinary
+            setCloudinaryData(data);
+            setSelectedPicture(URL.createObjectURL(files[0]))
+        }
   }
 
   function changeCaptchaHandler (value) {
@@ -121,21 +133,25 @@ export default function SignUp() {
   }
 
   function changeNameHandler (event){
+    setData({...data, name:event.target.value})
     if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, name: true })
     else  setError({ ...error, name: false })
   }
 
   function changeLastNameHandler (event){
+    setData({...data, lastname:event.target.value})
     if (!/^[A-Z].*$/u.test(event.target.value)) setError({ ...error, lastname: true })
     else  setError({ ...error, lastname: false })
   }
  
   function changeEmailHandler (event){
+    setData({...data, email:event.target.value})
     if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(event.target.value))  setError({ ...error, email: true })
     else  setError({ ...error, email: false })
   }
 
   function changePasswordHandler (event){
+    setData({...data, password:event.target.value})
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{6,10}$/u.test(event.target.value))
       setError({ ...error, password: true })
     else  setError({ ...error, password: false })
@@ -185,6 +201,8 @@ export default function SignUp() {
                     label="First Name"
                     autoFocus
                     onChange={changeNameHandler}
+                    value={data.name}
+                    color={error.name ? "error" : null}
                     sx={error.name ? { input: { color: 'red' } } : null}
                   />
                 </Tooltip>
@@ -199,6 +217,8 @@ export default function SignUp() {
                     name="lastName"
                     autoComplete="family-name"
                     onChange={changeLastNameHandler}
+                    value={data.lastname}
+                    color={error.lastname ? "error" : null}
                     sx={error.lastname ? { input: { color: 'red' } } : null}
                   />
                 </Tooltip>
@@ -213,6 +233,8 @@ export default function SignUp() {
                     name="email"
                     autoComplete="email"
                     onChange={changeEmailHandler}
+                    value={data.email}
+                    color={error.email ? "error" : null}
                     sx={error.email ? { input: { color: 'red' } } : null}
                   />
                 </Tooltip>
@@ -228,6 +250,8 @@ export default function SignUp() {
                     autoComplete="new-password"
                     type={visiblePassword ? '' : 'password'}
                     onChange={changePasswordHandler}
+                    value={data.password}
+                    color={error.password ? "error" : null}
                     sx={error.password ? { input: { color: 'red' } } : null}
                   />
                 </Tooltip>
