@@ -15,20 +15,13 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import Swal from "sweetalert2";
+import { useTheme } from '@mui/material/styles';
 
-const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
-
-//I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
-//in both places. Otherwise, I would've have to use the one in APP and use a hook here
-const theme = createTheme();
 
 export default function ContactUs({ darkMode }) {
-
-  const lightTheme = createTheme({
-    palette: {
-      mode:darkMode}
-    })
-
+  
+  const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
+  const theme = useTheme();
 
   //SENDING EMAIL CONFIGURATION
   const sendEmail = (e) => {
@@ -110,7 +103,7 @@ export default function ContactUs({ darkMode }) {
   }, [error])
 
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

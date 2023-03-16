@@ -38,7 +38,7 @@ function Navbar({setDarkLight, onSearch}) {
   //funcion que viene de props
   React.useEffect(()=>{
     setDarkLight(darkMode)
-  },[darkMode])
+  },[darkMode])  
 
 
 /********************************************************HANDLERS************************************************************/
@@ -110,7 +110,7 @@ function Navbar({setDarkLight, onSearch}) {
               </Button>
           </Tooltip>    
           <Tooltip title="Envelopes you haven't opened yet" sx={{mr:2}}>
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={userData.unopenedenvelopes===0 ? "0" : userData.unopenedenvelopes} color="error">
             <Button variant="contained" startIcon={<Inventory/>} color='secondary'>
                 Inventory
             </Button>

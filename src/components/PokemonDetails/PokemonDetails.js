@@ -16,6 +16,7 @@ import * as React from 'react';
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
+import Loader from "../Loader/Loader";
 
 
 const ExpandMore = styled((props) => {
@@ -59,7 +60,7 @@ function PokemonDetails({ darkMode }) {
     
     <div>
     <CssBaseline />
-
+    
     <Grid
     container
     spacing={0}
@@ -69,7 +70,7 @@ function PokemonDetails({ darkMode }) {
     style={{ minHeight: '100vh' }}
     >
       <Grid item xs={3}>
-
+      {selectedPokemon ? 
         <Card 
         sx={{ py:1, px:1, height: '100%', display: 'flex', maxWidth: 345, minWidth:300, 
         flexDirection: 'column', border: 5, borderRadius: 10,
@@ -102,11 +103,19 @@ function PokemonDetails({ darkMode }) {
           </CardActions>      
       </Box>
 
+      <Box m={1} p={1} display="flex" justifyContent="center">
           <CardMedia  
           component="img"
           image={selectedPokemon?selectedPokemon.image:""}
           alt="One Pokemon"
+          sx={{
+            height: '200px',
+            width: '350px',
+            objectFit: 'contain'
+          }}
           />
+      </Box>
+
           <CardContent>
             <Typography variant="h4" color="text.secondary" textAlign={"center"}>
                 {selectedPokemon?selectedPokemon.name:""}
@@ -180,8 +189,16 @@ function PokemonDetails({ darkMode }) {
         </CardContent>
       </Collapse>
     </Card>
-     
+    : 
+
+    <Box display="flex" justifyContent="space-evenly" alignItems="center" py={1}>
+        <Loader sx={{margin: 0, display: "flex",
+        justifyContent: "center", alignItems: "center", height:"100%"}}/>
+    </Box>
+    } 
+
     </Grid>   
+    
   </Grid>  
     </div>
   );

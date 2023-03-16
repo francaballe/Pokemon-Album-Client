@@ -21,18 +21,15 @@ import * as React from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
+import { useTheme } from '@mui/material/styles';
 
-
-const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
-const CLOUDINARY_CLOUDNAME = "dqnpgchkn"
-const CLOUDINARY_UPLOAD_PRESET = "xnxpphbf"
-
-//I'm just leaving this here as it has no point to use here the main theme already created....since I'm using the MUI default 
-//in both places. Otherwise, I would've have to use the one in APP and use a hook here
-const theme = createTheme();
 
 export default function SignUp() {
 
+  const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
+  const CLOUDINARY_CLOUDNAME = "dqnpgchkn"
+  const CLOUDINARY_UPLOAD_PRESET = "xnxpphbf"
+  const theme = useTheme();
   const navigate = useNavigate();
   const [visiblePassword, setVisiblePassword] = React.useState(false)
   const [selectedPicture,setSelectedPicture] = React.useState(undefined)

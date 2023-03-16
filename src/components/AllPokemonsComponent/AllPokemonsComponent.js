@@ -123,7 +123,6 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
       <AppBar position="relative">
 
         <Toolbar sx={{ pt: 0, justifyContent:"space-evenly" }}>
-        
           <Box>
             <FormControl sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel id="Pokemon-Type-label-id">Pokemon Type</InputLabel>
@@ -188,9 +187,8 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
               
         {filteredBySearch.length ?
         <Container maxWidth="xl" sx={{ py: 8 }}>
-          <Grid container spacing={5}>
-            {pokemonsToShow.map((card) => (
-              
+          <Grid container spacing={5}>            
+            {pokemonsToShow.map((card) => (              
               <Grid item key={card.id} xs={12} sm={6} md={1.5}>{/* 12/5 porque quiero mostrar 5 por fila */}
                 <Card
                   sx={{ py:1, px:1, height: '100%', display: 'flex', 

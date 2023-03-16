@@ -9,10 +9,9 @@ import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useDispatch } from "react-redux";
-import { getUserInformation } from "../../redux/actions/index"
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { getUserInformation } from "../../redux/actions/index";
 
 function Login() {
 
@@ -105,6 +104,7 @@ function Login() {
               <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
               <h2>Sign in</h2>
           </Grid>
+          
           <Grid align="center">
               <TextField value={user} onChange={changeUserHandler} style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
               <Grid display="flex" justifyContent={"space-between"}>
