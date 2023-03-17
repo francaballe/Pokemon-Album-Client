@@ -6,6 +6,16 @@ export function emptyPokemonCard(){
     }
 }
 
+export function updateUserInformation(envelopes){    
+
+return async function (dispatch) {      
+      return dispatch({
+        type: "UPDATE_USER_INFO",        
+        payload: envelopes
+      });
+    };    
+}
+
 export function getUserInformation(id, password){
     
     const data = {id,password}

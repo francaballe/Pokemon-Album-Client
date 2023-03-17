@@ -72,6 +72,10 @@ function Navbar({setDarkLight, onSearch}) {
     navigate(`/contactus`);
   }
 
+  function inventoryDetailsHandler(){
+    navigate(`/inventorydetails`);
+  }
+
   /****************************************************************************************************************************/
 
 
@@ -95,8 +99,8 @@ function Navbar({setDarkLight, onSearch}) {
           </Tooltip>
 
           <Tooltip title="Report any issues or leave a nice comment" sx={{mr:30}}>
-              <Button variant="contained" startIcon={<ContactMailIcon/>} onClick={contactUsHandler}
-                color='secondary'>Contact Us
+              <Button variant="contained" startIcon={<ContactMailIcon/>} onClick={contactUsHandler} color='secondary'>
+                  Contact Us
               </Button>
           </Tooltip>    
         </Box>
@@ -111,7 +115,7 @@ function Navbar({setDarkLight, onSearch}) {
           </Tooltip>    
           <Tooltip title="Envelopes you haven't opened yet" sx={{mr:2}}>
           <Badge badgeContent={userData.unopenedenvelopes===0 ? "0" : userData.unopenedenvelopes} color="error">
-            <Button variant="contained" startIcon={<Inventory/>} color='secondary'>
+            <Button variant="contained" startIcon={<Inventory/>} onClick={inventoryDetailsHandler} color='secondary'>
                 Inventory
             </Button>
           </Badge>    

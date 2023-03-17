@@ -18,6 +18,13 @@ const initialState = {
             loggedInUser: action.payload
           }
 
+        case "UPDATE_USER_INFO":
+          
+          return {
+            ...state,
+            loggedInUser: {...state.loggedInUser, unopenedenvelopes:action.payload}
+          }
+
         case "RESET_USER_INFO":
           return {
             ...state,
