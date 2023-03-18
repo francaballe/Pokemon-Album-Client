@@ -14,88 +14,70 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 //import { useNavigate } from 'react-router-dom';
-//import RarityRating from './RarityRating/RarityRating';
+//import RarityRating from "../AllPokemonsComponent/RarityRating/RarityRating";
 import NoMatch from "../AllPokemonsComponent/NoMatch/NoMatch";
 import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from "axios";
 import { updateUserInformation } from "../../redux/actions/index";
+import { ThemeProvider, useTheme } from '@mui/material/styles';
+import Rating from '@mui/material/Rating';
 
 
 
 
-function InventoryDetails(/* {allTypes, allPokemons, darkMode, nameFilter} */) {
+function InventoryDetails({ allPokemons, darkMode }) {
 
+  const theme = useTheme();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.loggedInUser);
   const [disableOpenEnvelope, setDisableOpenEnvelope] = React.useState(false)
   const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
-
-  /* 
-  const navigate = useNavigate();
-  const [rarity, setRarity] = React.useState("Any Rarity");
-  const [type, setType] = React.useState("Any Type");
-  const [order, setOrder] = React.useState("No Order");
-  const [available, setAvailable] = React.useState("Show All");
- */
-  //STYLES
-  //const pokemonTypeStyle = { height:'3vh' }
-
-  //PAGING
-  /* const pokemonsPerPage = 16
-  const [page, setPage] = React.useState(1);
-  const allPokemonsCpy = [...allPokemons] */
-
-  /* const mapRarity = {
-    "Any Rarity":0,
-    "Common":1,
-    "Uncommon":2,
-    "Rare":3,
-    "Epic":4,
-    "Legendary":5
-  }
-
-  const filteredByRarity = mapRarity[rarity]!==0 ? (allPokemonsCpy.filter(onePokemon => onePokemon.stars===mapRarity[rarity])) 
-  : allPokemonsCpy
-
-  const filteredByType = type!=="Any Type" ? (filteredByRarity.filter(
-    OnePokemon => OnePokemon.types.some(obj => obj.name===type.toLocaleLowerCase())))
-  : filteredByRarity
-
-  const filteredByAvailability = available!=="Show All" ? (available==="Only Available Pokemons" ?
-      filteredByType.filter(onePokemon => userData.id && userData.pokemons.includes(onePokemon.id))
-      :
-      filteredByType.filter(onePokemon => userData.id && !userData.pokemons.includes(onePokemon.id)))
-  : filteredByType
-
-  const filteredBySearch = nameFilter ? filteredByAvailability.filter(onePokemon => onePokemon.name.includes(nameFilter))
-  : filteredByAvailability
-
-  switch (order){
-    case "Name (A-Z)": (filteredBySearch.sort((x, y) => x.name.localeCompare(y.name)))
-    break;
-    case "Name (Z-A)": (filteredBySearch.sort((x, y) => y.name.localeCompare(x.name)))
-    break;
-    case "Rarity (Uncommon to Legendary)": (filteredBySearch.sort((x, y) => x.stars - y.stars))
-    break;
-    case "Rarity (Legendary to Uncommon)": (filteredBySearch.sort((x, y) => y.stars - x.stars))
-    break; */
-    /* default:  */
-  /* }
-
-  const pokemonsTotalPages = Math.ceil(filteredBySearch.length / pokemonsPerPage)
-  const pokemonsToShow = filteredBySearch.slice((pokemonsPerPage*page)-pokemonsPerPage,pokemonsPerPage*page)
+  //const pokemonsToShow = [1,2,3,4,5]
+  const [newPokemons, setNewPokemons] = React.useState([])
+  const [turnedCard, setTurnedCard] = React.useState([false,false,false,false,false])
+  const [disableCards, setDisableCards] = React.useState(true)
   
-  const pokemonRarities = ["Any Rarity","Common","Uncommon","Rare","Epic","Legendary"]
-  const pokemonOrders = ["No Order","Name (A-Z)", "Name (Z-A)", "Rarity (Uncommon to Legendary)","Rarity (Legendary to Uncommon)"]
-  const pokemonInventory = ["Show All","Only Available Pokemons","Missing Pokemons"]
- */
 
-  const pokemonsToShow = [1,2,3,4,5]
+  function randomizePokemonOpening (){
+    
+      const totalPokemonNumber = [...Array(672).keys()]
+      const randomNums = []
+      let i = totalPokemonNumber.length
+      let j = 0;
+      
+      while (i--) {
+          j = Math.floor(Math.random() * (i+1));
+          randomNums.push(totalPokemonNumber[j]);
+          totalPokemonNumber.splice(j,1);
+      }
+
+      /* console.log("uno:",allPokemons[randomNums[0]].name)
+      console.log("dos:",allPokemons[randomNums[1]].name)
+      console.log("tres:",allPokemons[randomNums[2]].name)
+      console.log("cuatro:",allPokemons[randomNums[3]].name)
+      console.log("cinco:",allPokemons[randomNums[4]].name) */
+
+      const the5Chosen = []
+      for (let i=0;i<5;i++){
+        the5Chosen.push(allPokemons[randomNums[i]])
+      }
+      //console.log("dentro de la funcion randomize:",the5Chosen)
+      return the5Chosen
+
+    }
 
   /****************************************************Handlers**************************************************************/
 
   async function handleOpenEnvelope(){
+
+    setTurnedCard([false,false,false,false,false])
+    setDisableOpenEnvelope(true)
+    setDisableCards(false)
+
+    const chosenOnes = randomizePokemonOpening();
+    setNewPokemons(chosenOnes)
+    //console.log("newPokemons:",newPokemons)
     
     let newEnvelopesValue = --userData.unopenedenvelopes    
 
@@ -110,6 +92,12 @@ function InventoryDetails(/* {allTypes, allPokemons, darkMode, nameFilter} */) {
     
   }
 
+  function showCardHandler(index) {    
+    let turnedCardCpy = [...turnedCard]
+    turnedCardCpy[index]=true
+    setTurnedCard(turnedCardCpy)
+  }
+
 
 /**************************************************************************************************************************/
 
@@ -117,8 +105,14 @@ React.useEffect(()=>{
   if (userData.unopenedenvelopes===0) setDisableOpenEnvelope(true)  
 },[userData])
 
+React.useEffect(()=>{
+  if (!turnedCard.includes(false))  setDisableOpenEnvelope(false)
+},[turnedCard])
+
+
 
   return (
+    <ThemeProvider theme={theme}>
     
       <div>
       <CssBaseline />
@@ -138,16 +132,18 @@ React.useEffect(()=>{
 
           <Grid container spacing={5}    
             alignItems="row"
-            justifyContent="center"            
+            justifyContent="center"
           >          
 
-            {pokemonsToShow.map((card) => (              
-              <Grid item key={card} xs={12} sm={6} md={2}>
-                <Card
-                  sx={{ py:1, px:1, height: '100%', display: 'flex', 
-                  flexDirection: 'column', border: 5, borderRadius: 10,
+            {newPokemons.map((card,index) => (              
+              <Grid item key={card.id} xs={12} sm={6} md={2} >
+                <Card                  
+                  onClick={()=>showCardHandler(index)}
+                  sx={{ borderRadius: 5, border: 2, bgcolor: 'primary.main',
+                  opacity: disableCards? 0.5 : 1,pointerEvents: disableCards? "none" : "auto",
+                  
                   /* opacity: userData.pokemons && userData.pokemons.includes(card.id) ? '100%' : '10%', */
-                  /* borderColor:  card.stars===5 ? 'legendary.main' : 
+                  borderColor:  card.stars===5 ? 'legendary.main' : 
                                 card.stars===4 ? 'epic.main' : 
                                 card.stars===3 ? 'rare.main' : 
                                 card.stars===2 ? 'uncommon.light' : 
@@ -162,34 +158,40 @@ React.useEffect(()=>{
                               card.stars===4 ? '10px 5px 5px purple' : 
                               card.stars===3 ? '10px 5px 5px blue' : 
                               card.stars===2 ? '10px 5px 5px #007500' : 
-                              '10px 5px 5px grey' */
+                              '10px 5px 5px grey'
                     }}
                 >
                   <Box m={1} p={1} display="flex" justifyContent="center">
-                    <CardMedia
-                      component="img"
-                      sx={{
-                        height: '100px',
-                        width: '130px',
-                        objectFit: 'contain'
-                      }}
-                      image="https://res.cloudinary.com/dqnpgchkn/image/upload/v1678730045/Pokemons%20Album/AllTypes_xrdqg4.svg"
-                      alt="pokemon"
+                  
+                    <CardMedia                      
+                      sx={{borderRadius:3}}
+                      component="img"                                            
+                      image={turnedCard[index]===true ? newPokemons[index].image
+                        : "https://res.cloudinary.com/dqnpgchkn/image/upload/v1679101917/Pokemons%20Album/Pokemon-Card_f9paw9.png"
+                         }
+                      alt="unopened pokemon card"
                     />
+                                        
                   </Box>
 
                   <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography align="center" gutterBottom variant="h6" component="h2">
-                      {card.name}  
-                    </Typography>
-                    <Typography align="center" gutterBottom variant="h6" component="h2">
-                      {card.id ? `#{card.id}` : null}
-                    </Typography>
-                    <Typography align='center'>
-                      {card.id ?
-                        <Button onClick={()=>handleMoreInfoClick(card.id)} size="small" disabled={userData.pokemons && userData.pokemons.includes(card.id)?false:true}>More Info</Button>
-                      : <h2>????</h2>}
-                    </Typography>
+                    {turnedCard[index]===true ? 
+                        <>
+                            <Typography align="center" gutterBottom variant="h6" component="h2">
+                              {card.name}  
+                            </Typography>
+                            <Typography align="center" gutterBottom variant="h6" component="h2">
+                              {card.id ? `#${card.id}` : null}
+                            </Typography>
+                            <Typography align="center">
+                                <Rating name="read-only" value={card.stars} readOnly />
+                            </Typography>
+                        </>
+                        :
+                        <Typography align="center" gutterBottom variant="h6" component="h2">
+                          ????
+                        </Typography>
+                    }
                   </CardContent>
                                     
                   {/* <Typography align="center">
@@ -205,6 +207,7 @@ React.useEffect(()=>{
       </main>
       
       </div>  
+      </ThemeProvider>
   );
 }
 
