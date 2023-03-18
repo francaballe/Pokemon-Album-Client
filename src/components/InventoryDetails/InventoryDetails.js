@@ -33,7 +33,7 @@ function InventoryDetails({ allPokemons, darkMode }) {
   const userData = useSelector((state) => state.loggedInUser);
   const [disableOpenEnvelope, setDisableOpenEnvelope] = React.useState(false)
   const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
-  //const pokemonsToShow = [1,2,3,4,5]
+  const pokemonsToShow = [1,2,3,4,5]
   const [newPokemons, setNewPokemons] = React.useState([])
   const [turnedCard, setTurnedCard] = React.useState([false,false,false,false,false])
   const [disableCards, setDisableCards] = React.useState(true)
@@ -134,15 +134,18 @@ React.useEffect(()=>{
             alignItems="row"
             justifyContent="center"
           >          
-
-            {newPokemons.map((card,index) => (              
-              <Grid item key={card.id} xs={12} sm={6} md={2} >
+            
+            {(newPokemons.length ? newPokemons : pokemonsToShow)
+            .map((card,index) => (              
+              <Grid item key={card.id ? card.id : card} xs={12} sm={6} md={2} >
                 <Card                  
                   onClick={()=>showCardHandler(index)}
-                  sx={{ borderRadius: 5, border: 2, bgcolor: 'primary.main',
+                  sx={{ borderRadius: 5, border: 2, bgcolor: disableCards? 'primary.main' : null,
                   opacity: disableCards? 0.5 : 1,pointerEvents: disableCards? "none" : "auto",
                   
-                  /* opacity: userData.pokemons && userData.pokemons.includes(card.id) ? '100%' : '10%', */
+                  height: '450px',
+                  width: '240px',
+
                   borderColor:  card.stars===5 ? 'legendary.main' : 
                                 card.stars===4 ? 'epic.main' : 
                                 card.stars===3 ? 'rare.main' : 
@@ -152,8 +155,8 @@ React.useEffect(()=>{
                               (card.stars===5 ? 'linear-gradient(to right bottom,orange, yellow, white)' : 
                               card.stars===4 ? 'linear-gradient(to right bottom, #800080, #b266b2)' : 
                               card.stars===3 ? 'linear-gradient(to right bottom, #0000ff, #9999ff)' : 
-                              card.stars===2 ? 'linear-gradient(to right bottom, #003300, #008000)' : 
-                              'linear-gradient(to right bottom, #262626, #808080)'),
+                              card.stars===2 ? 'linear-gradient(to right bottom, #003300, #008000)' :
+                              card.stars===1 ? 'linear-gradient(to right bottom, #262626, #808080)' : null),
                   boxShadow: card.stars===5 ? '10px 5px 5px #C99700' : 
                               card.stars===4 ? '10px 5px 5px purple' : 
                               card.stars===3 ? '10px 5px 5px blue' : 
@@ -164,8 +167,15 @@ React.useEffect(()=>{
                   <Box m={1} p={1} display="flex" justifyContent="center">
                   
                     <CardMedia                      
-                      sx={{borderRadius:3}}
-                      component="img"                                            
+                      sx={turnedCard[index]===true ?
+                        {borderRadius:5,
+                        height: '250px',
+                        width: '200px',
+                        objectFit: 'contain'
+                      } :
+                      { borderRadius:3 }
+                    }
+                      component="img"
                       image={turnedCard[index]===true ? newPokemons[index].image
                         : "https://res.cloudinary.com/dqnpgchkn/image/upload/v1679101917/Pokemons%20Album/Pokemon-Card_f9paw9.png"
                          }
@@ -188,15 +198,11 @@ React.useEffect(()=>{
                             </Typography>
                         </>
                         :
-                        <Typography align="center" gutterBottom variant="h6" component="h2">
+                        <Typography align="center" py={5}/* gutterBottom */ variant="h6" component="h2">
                           ????
                         </Typography>
                     }
-                  </CardContent>
-                                    
-                  {/* <Typography align="center">
-                      <Rating name="read-only" value={card.stars} readOnly />
-                  </Typography> */}
+                  </CardContent>                                    
                   
                 </Card>
               </Grid>
