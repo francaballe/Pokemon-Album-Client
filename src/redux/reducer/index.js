@@ -18,11 +18,16 @@ const initialState = {
             loggedInUser: action.payload
           }
 
-        case "UPDATE_USER_INFO":
-          
+        case "UPDATE_USER_INFO":          
+          const newPokemonList = [...state.loggedInUser.pokemons]
+          for (let i=0;i<action.payload.chosenOnes.length;i++){
+            if (!newPokemonList.includes(action.payload.chosenOnes[i]))
+            newPokemonList.push(action.payload.chosenOnes[i])
+          }          
           return {
             ...state,
-            loggedInUser: {...state.loggedInUser, unopenedenvelopes:action.payload}
+            loggedInUser: {...state.loggedInUser, unopenedenvelopes:action.payload.envelopes,
+              pokemons:[...newPokemonList]}
           }
 
         case "RESET_USER_INFO":

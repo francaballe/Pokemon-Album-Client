@@ -6,12 +6,15 @@ export function emptyPokemonCard(){
     }
 }
 
-export function updateUserInformation(envelopes){    
-
+export function updateUserInformation(envelopes,chosenOnes){    
+    const data = {
+        envelopes,
+        chosenOnes
+    }
 return async function (dispatch) {      
       return dispatch({
         type: "UPDATE_USER_INFO",        
-        payload: envelopes
+        payload: data
       });
     };    
 }

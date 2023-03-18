@@ -22,6 +22,7 @@ import axios from "axios";
 import { updateUserInformation } from "../../redux/actions/index";
 import { ThemeProvider, useTheme } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
+import { getUserInformation } from "../../redux/actions/index";
 
 
 
@@ -84,11 +85,15 @@ function InventoryDetails({ allPokemons, darkMode }) {
     const data = {
       "id": userData.id,
 	    "unopenedenvelopes":newEnvelopesValue,
-	    "token": crossAccessToken
+	    "token": crossAccessToken,
+      "pokemons": chosenOnes.map(onePokemon => onePokemon.id)
     }
     const respuesta = await axios.put("http://localhost:3001/users",data)
 
-    if (respuesta)  dispatch(updateUserInformation(newEnvelopesValue));
+    if (respuesta)  {
+      dispatch(updateUserInformation(newEnvelopesValue,chosenOnes.map(onePokemon => onePokemon.id)));
+      console.log("datos usuario:",userData)
+    }
     
   }
 
