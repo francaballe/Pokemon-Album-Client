@@ -20,6 +20,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import RarityRating from './RarityRating/RarityRating';
 import NoMatch from "../AllPokemonsComponent/NoMatch/NoMatch";
+import Badge from '@mui/material/Badge';
 
 
 function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
@@ -55,10 +56,10 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
     OnePokemon => OnePokemon.types.some(obj => obj.name===type.toLocaleLowerCase())))
   : filteredByRarity
 
-  const filteredByAvailability = available!=="Show All" ? (available==="Only Available Pokemons" ?
-      filteredByType.filter(onePokemon => userData.id && userData.pokemons.includes(onePokemon.id))
-      :
-      filteredByType.filter(onePokemon => userData.id && !userData.pokemons.includes(onePokemon.id)))
+  const filteredByAvailability = !available.includes("Show All") ? (available.includes("Available Pokemons") ?
+  filteredByType.filter(onePokemon => userData.id && userData.pokemons.includes(onePokemon.id))
+  :
+  filteredByType.filter(onePokemon => userData.id && !userData.pokemons.includes(onePokemon.id)))
   : filteredByType
 
   const filteredBySearch = nameFilter ? filteredByAvailability.filter(onePokemon => onePokemon.name.includes(nameFilter))
@@ -81,8 +82,28 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
   
   const pokemonRarities = ["Any Rarity","Common","Uncommon","Rare","Epic","Legendary"]
   const pokemonOrders = ["No Order","Name (A-Z)", "Name (Z-A)", "Rarity (Uncommon to Legendary)","Rarity (Legendary to Uncommon)"]
-  const pokemonInventory = ["Show All","Only Available Pokemons","Missing Pokemons"]
+  
+  const pokemonInventory = [
+    {
+      text:"Show All",
+      number: 672
+    },
+    {
+      text:"Available Pokemons",
+      number: userData.pokemons.length
+    },
+    {
+      text:"Missing Pokemons",
+      number:672-userData.pokemons.length
+    }
+  ]
+  
 
+  //Setting the page as 1 when using the searchBar (intentionally)
+  React.useEffect(()=>{
+    setPage(1)
+  },[nameFilter])
+  
 
   /****************************************************Handlers**************************************************************/
 
@@ -129,7 +150,7 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
                 <Select value={type} label="Pokemon Type" onChange={handleTypeChange}>
                     {allTypes.map(oneType => 
                     <MenuItem key={oneType.id} value={oneType.name}>
-                      <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", /* backgroundColor: "blue", */ width:"100%"}}>
+                      <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", width:"100%"}}>
                         {oneType.name}
                         <Box sx={{display: "flex", justifyItems:"center"}}>
                           <CardMedia 
@@ -163,20 +184,29 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
           <Pagination page={page} onChange={handlePageChange} count={pokemonsTotalPages} variant="outlined" shape="rounded" size="large" color="secondary"/>
 
           <Box>
+            
             <FormControl sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel id="Pokemon-Order-label-id">Order By</InputLabel>
                 <Select value={order} label="Order By" onChange={handleOrderChange}>
                     {pokemonOrders.map(oneType => <MenuItem key={oneType} value={oneType}>{oneType}</MenuItem>)}
                 </Select>
-            </FormControl>
-
-            <FormControl sx={{ m: 1, minWidth: 150 }}>
-                <InputLabel id="Pokemon-Inventory-label-id">Inventory</InputLabel>
+            </FormControl>            
+            
+            <FormControl sx={{ m: 1, minWidth: 235 }}>
+              <InputLabel id="Pokemon-Inventory-label-id">Inventory</InputLabel>
                 <Select value={available} label="Inventory" onChange={handleInventoryChange}>
-                    {pokemonInventory.map(oneType => <MenuItem key={oneType} value={oneType}>{oneType}</MenuItem>)}
+                    {pokemonInventory.map(oneType => 
+                    <MenuItem key={oneType.text} value={oneType.text}>
+                      <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", width:"90%"}}>
+                        {oneType.text}
+                        <Box sx={{display: "flex", justifyItems:"center"}}>
+                          <Badge badgeContent={oneType.number} color="secondary" max={999}/>
+                        </Box>
+                      </Box>
+                    </MenuItem>)}
                 </Select>
             </FormControl>
-          
+
           </Box>
       
         </Toolbar>

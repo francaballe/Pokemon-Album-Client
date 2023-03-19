@@ -6,23 +6,19 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
-//import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid';
-//import InputLabel from '@mui/material/InputLabel';
-//import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-//import { useNavigate } from 'react-router-dom';
-//import RarityRating from "../AllPokemonsComponent/RarityRating/RarityRating";
-import NoMatch from "../AllPokemonsComponent/NoMatch/NoMatch";
+import { useNavigate } from 'react-router-dom';
 import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
-import { useSelector, useDispatch } from 'react-redux';
-import axios from "axios";
-import { updateUserInformation } from "../../redux/actions/index";
-import { ThemeProvider, useTheme } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
-import { getUserInformation } from "../../redux/actions/index";
+import { ThemeProvider, useTheme } from '@mui/material/styles';
+import axios from "axios";
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserInformation } from "../../redux/actions/index";
+import Link from '@mui/material/Link';
+import { ButtonBase } from '@mui/material';
 
 
 
@@ -30,6 +26,7 @@ import { getUserInformation } from "../../redux/actions/index";
 function InventoryDetails({ allPokemons, darkMode }) {
 
   const theme = useTheme();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.loggedInUser);
   const [disableOpenEnvelope, setDisableOpenEnvelope] = React.useState(false)
@@ -53,17 +50,11 @@ function InventoryDetails({ allPokemons, darkMode }) {
           totalPokemonNumber.splice(j,1);
       }
 
-      /* console.log("uno:",allPokemons[randomNums[0]].name)
-      console.log("dos:",allPokemons[randomNums[1]].name)
-      console.log("tres:",allPokemons[randomNums[2]].name)
-      console.log("cuatro:",allPokemons[randomNums[3]].name)
-      console.log("cinco:",allPokemons[randomNums[4]].name) */
-
       const the5Chosen = []
       for (let i=0;i<5;i++){
         the5Chosen.push(allPokemons[randomNums[i]])
       }
-      //console.log("dentro de la funcion randomize:",the5Chosen)
+
       return the5Chosen
 
     }
@@ -71,14 +62,13 @@ function InventoryDetails({ allPokemons, darkMode }) {
   /****************************************************Handlers**************************************************************/
 
   async function handleOpenEnvelope(){
-
+  
     setTurnedCard([false,false,false,false,false])
     setDisableOpenEnvelope(true)
     setDisableCards(false)
 
     const chosenOnes = randomizePokemonOpening();
     setNewPokemons(chosenOnes)
-    //console.log("newPokemons:",newPokemons)
     
     let newEnvelopesValue = --userData.unopenedenvelopes    
 
@@ -92,23 +82,26 @@ function InventoryDetails({ allPokemons, darkMode }) {
 
     if (respuesta)  {
       dispatch(updateUserInformation(newEnvelopesValue,chosenOnes.map(onePokemon => onePokemon.id)));
-      console.log("datos usuario:",userData)
+      //console.log("datos usuario:",userData)
     }
     
   }
 
-  function showCardHandler(index) {    
+  function showCardHandler(index) { 
     let turnedCardCpy = [...turnedCard]
     turnedCardCpy[index]=true
     setTurnedCard(turnedCardCpy)
   }
 
+  function handleGoBack (event){
+    navigate("/pokemons")
+  }
 
 /**************************************************************************************************************************/
 
 React.useEffect(()=>{
   if (userData.unopenedenvelopes===0) setDisableOpenEnvelope(true)  
-},[userData])
+},/* [userData] */)
 
 React.useEffect(()=>{
   if (!turnedCard.includes(false))  setDisableOpenEnvelope(false)
@@ -133,21 +126,21 @@ React.useEffect(()=>{
       
       <main>
         
-        <Container maxWidth="xl" sx={{ py: 8 }}>
+        <Container maxWidth="xl" sx={{ py: 18 }}>
+          
+              <Grid container spacing={20}    
+                alignItems="row"
+                justifyContent="center"                
+              >                    
 
-          <Grid container spacing={5}    
-            alignItems="row"
-            justifyContent="center"
-          >          
-            
             {(newPokemons.length ? newPokemons : pokemonsToShow)
             .map((card,index) => (              
               <Grid item key={card.id ? card.id : card} xs={12} sm={6} md={2} >
+                <ButtonBase disabled={disableCards}>
                 <Card                  
                   onClick={()=>showCardHandler(index)}
                   sx={{ borderRadius: 5, border: 2, bgcolor: disableCards? 'primary.main' : null,
-                  opacity: disableCards? 0.5 : 1,pointerEvents: disableCards? "none" : "auto",
-                  
+                  opacity: disableCards? 0.5 : 1,                  
                   height: '450px',
                   width: '240px',
 
@@ -169,6 +162,7 @@ React.useEffect(()=>{
                               '10px 5px 5px grey'
                     }}
                 >
+                  
                   <Box m={1} p={1} display="flex" justifyContent="center">
                   
                     <CardMedia                      
@@ -210,11 +204,21 @@ React.useEffect(()=>{
                   </CardContent>                                    
                   
                 </Card>
+                </ButtonBase>
               </Grid>
             ))}
           </Grid>
-        </Container>
-        
+
+          <Grid container justifyContent="center" pt={5}>
+            <Typography>
+                  <Link component="button" variant="body1" onClick={handleGoBack} >
+                      Go Back
+                  </Link>
+            </Typography>            
+        </Grid>
+
+        </Container>                
+
       </main>
       
       </div>  
