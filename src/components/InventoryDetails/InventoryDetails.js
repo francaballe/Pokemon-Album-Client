@@ -130,7 +130,8 @@ React.useEffect(()=>{
           
               <Grid container spacing={20}    
                 alignItems="row"
-                justifyContent="center"                
+                justifyContent="center"               
+                sx={{pr:20}}
               >                    
 
             {(newPokemons.length ? newPokemons : pokemonsToShow)

@@ -12,6 +12,7 @@ import PokemonDetails from "../src/components/PokemonDetails/PokemonDetails";
 import SignUp from "../src/components/SignUp/SignUp";
 import ContactUs from "../src/components/ContactUs/ContactUs";
 import InventoryDetails from "../src/components/InventoryDetails/InventoryDetails";
+import ForgotPassword from "../src/components/ForgotPassword/ForgotPassword";
 
 
 function App() {
@@ -80,6 +81,7 @@ function App() {
     <Routes>
           <Route path="/" element={<Login/>}></Route>
           <Route path="/signup" element={<SignUp/>}></Route>
+          <Route path="/forgotpassword" element={<ForgotPassword/>}></Route>
           <Route element={<AuthGuard/>}>
               <Route element={<Navbar setDarkLight={setDarkLight} onSearch={onSearch}/>}>
                   <Route path="/pokemons" element={<AllPokemonsComponent allTypes={allTypes} allPokemons={allPokemons} darkMode={darkMode} nameFilter={nameFilter}/>}/>

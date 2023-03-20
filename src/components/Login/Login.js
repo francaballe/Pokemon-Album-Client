@@ -92,6 +92,10 @@ function Login() {
     navigate(`/signup`)
   }
 
+  function handleForgotPassword(){
+    navigate(`/forgotpassword`)
+  }
+
   
 /****************************************************************************************************************************/
 
@@ -120,15 +124,15 @@ function Login() {
               <Button /* type='submit' */ color='primary' variant="contained" style={btnStyle} fullWidth onClick={handleSignIn}>Sign In</Button>
               
               <Typography style={textFieldStyle}>
-                <Link href="#">
-                  Forgot Password ?
-                </Link>
+                  <Link component="button" variant="body1" onClick={handleForgotPassword}>
+                      Forgot Password ?
+                  </Link>              
               </Typography>
 
               <Typography style={textFieldStyle}> Don't have an account yet ?{" "}
-              <Link component="button" variant="body1" onClick={handleSignUp}>
-                  Sign Up
-              </Link>
+                  <Link component="button" variant="body1" onClick={handleSignUp}>
+                      Sign Up
+                  </Link>
               </Typography>
 
               {(firstClick && loginError) ? 
