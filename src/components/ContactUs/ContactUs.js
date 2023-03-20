@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
 
 
-export default function ContactUs({ darkMode }) {
+export default function ContactUs() {
   
   const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
   const theme = useTheme();

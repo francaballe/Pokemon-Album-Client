@@ -86,7 +86,7 @@ function App() {
               <Route element={<Navbar setDarkLight={setDarkLight} onSearch={onSearch}/>}>
                   <Route path="/pokemons" element={<AllPokemonsComponent allTypes={allTypes} allPokemons={allPokemons} darkMode={darkMode} nameFilter={nameFilter}/>}/>
                   <Route path="/pokemons/:pokemonId" element={<PokemonDetails darkMode={darkMode}/>}/>
-                  <Route path="/contactus" element={<ContactUs /* darkMode={darkMode} *//>}/>
+                  <Route path="/contactus" element={<ContactUs/>}/>
                   <Route path="/inventorydetails" element={<InventoryDetails allPokemons={allPokemons} darkMode={darkMode}/>}/>
               </Route>
           </Route>
