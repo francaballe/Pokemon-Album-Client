@@ -18,7 +18,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserInformation } from "../../redux/actions/index";
 import Link from '@mui/material/Link';
-import { ButtonBase } from '@mui/material';
+import { ButtonBase, createSvgIcon } from '@mui/material';
+import FiberNewIcon from '@mui/icons-material/FiberNew';
 
 
 
@@ -35,6 +36,11 @@ function InventoryDetails({ allPokemons, darkMode }) {
   const [newPokemons, setNewPokemons] = React.useState([])
   const [turnedCard, setTurnedCard] = React.useState([false,false,false,false,false])
   const [disableCards, setDisableCards] = React.useState(true)
+
+  const EmptyIcon = createSvgIcon(
+    <path d="" />,
+    'EmptyIcon',
+  );
   
 
   function randomizePokemonOpening (){
@@ -54,6 +60,10 @@ function InventoryDetails({ allPokemons, darkMode }) {
       for (let i=0;i<5;i++){
         the5Chosen.push(allPokemons[randomNums[i]])
       }
+      
+      for (let i=0;i<5;i++){
+        if (!userData.pokemons.includes(the5Chosen[i].id))  the5Chosen[i].new=true        
+      }      
 
       return the5Chosen
 
@@ -126,17 +136,26 @@ React.useEffect(()=>{
       
       <main>
         
-        <Container maxWidth="xl" sx={{ py: 18 }}>
+        <Container maxWidth="xl" sx={{ py: 10 }}>
           
               <Grid container spacing={20}    
                 alignItems="row"
                 justifyContent="center"               
-                sx={{pr:20}}
+                /* sx={{pr:20}} */
               >                    
 
             {(newPokemons.length ? newPokemons : pokemonsToShow)
             .map((card,index) => (              
               <Grid item key={card.id ? card.id : card} xs={12} sm={6} md={2} >
+                
+                <Grid container justifyContent="center" pt={5}>
+                  
+                  {(card && card.new) ?
+                      <FiberNewIcon sx={{fontSize:"50px", color: 'secondary.main'}}/>
+                      :
+                      <EmptyIcon sx={{fontSize:"50px", color: 'primary.main'} }/>
+                  }
+
                 <ButtonBase disabled={disableCards}>
                 <Card                  
                   onClick={()=>showCardHandler(index)}
@@ -207,6 +226,7 @@ React.useEffect(()=>{
                 </Card>
                 </ButtonBase>
               </Grid>
+              </Grid>
             ))}
           </Grid>
 
@@ -216,7 +236,7 @@ React.useEffect(()=>{
                       Go Back
                   </Link>
             </Typography>            
-        </Grid>
+          </Grid>
 
         </Container>                
 

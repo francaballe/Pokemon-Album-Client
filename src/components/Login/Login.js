@@ -21,8 +21,6 @@ function Login() {
   const userData = useSelector((state) => state.loggedInUser);
   
   const image = "https://wallpaperaccess.com/full/697708.jpg"
-  //const image = "https://wallpaperaccess.com/full/697715.jpg"
-  
   const paperStyle = {padding: 20, height:'70vh', width:280}
   const avatarStyle = {backgroundColor:theme.palette.primary.main}
   const mainContainerStyle = { backgroundImage:`url(${image})`,backgroundRepeat:"no-repeat",backgroundSize:"contain", 
@@ -30,21 +28,23 @@ function Login() {
   const btnStyle = {margin:'8px 0'}
   const textFieldStyle = {margin:'8px 0'}
 
+  //GENERAL STATES
   const [checked, setChecked] = React.useState(true);
-  const [visiblePassword, setVisiblePassword] = React.useState(false)
+  const [visiblePassword, setVisiblePassword] = React.useState(false)  
+  const [loginError, setLoginError] = React.useState("")  
+
+  //STATES FOR CONTROLLED FORM
   const [user, setUser] = React.useState("")
   const [password,setPassword] = React.useState("")
-  const [loginError, setLoginError] = React.useState(undefined)
-  const [firstClick, setFirstClick] = React.useState(false)
 
   useEffect(()=>{
     if (userData.id) {
-      setLoginError(false)
+      setLoginError("no error")
       //console.log("logueo OK")
       navigate(`/pokemons`);
     }
     if (userData==="login failed") {
-      setLoginError(true)
+      setLoginError("error")
       //console.log("logueo MAL")
     }      
   },[userData])
@@ -57,8 +57,7 @@ function Login() {
   useEffect(()=>{
     if (checked){
       let savedUser = localStorage.getItem("User");
-      setUser(savedUser)
-      //console.log("savedUser:",savedUser)
+      setUser(savedUser)      
     }
   },[])
 
@@ -83,9 +82,8 @@ function Login() {
   }
 
   function handleSignIn (){
-    if (user==='' || password==='') setLoginError(true)
-    else dispatch(getUserInformation(user, password));
-    setFirstClick(true)
+    if (user==='' || password==='') setLoginError("error")
+    else dispatch(getUserInformation(user, password));    
   }
   
   function handleSignUp (){
@@ -112,7 +110,7 @@ function Login() {
           <Grid align="center">
               <TextField value={user} onChange={changeUserHandler} style={textFieldStyle} label='Username' placeholder='Enter username' fullWidth required/>
               <Grid display="flex" justifyContent={"space-between"}>
-                  <TextField onChange={changePasswordHandler} style={textFieldStyle} label='Password' placeholder='Enter password' type={visiblePassword ? '' : 'password'} required/>
+                  <TextField value={password} onChange={changePasswordHandler} style={textFieldStyle} label='Password' placeholder='Enter password' type={visiblePassword ? '' : 'password'} required/>
                   <IconButton onClick={handleVisiblePassword} color="primary" aria-label="visible/invisible password" component="label" sx={{mr:1.5}}>
                       {visiblePassword ? <VisibilityIcon/> : <VisibilityOffIcon/>} 
                   </IconButton>
@@ -135,18 +133,18 @@ function Login() {
                   </Link>
               </Typography>
 
-              {(firstClick && loginError) ? 
+              {loginError==="error" && 
                   <Typography color="red">
-                    Login Error! Try Again
+                      Login Error! Try Again                    
                   </Typography>
-                  :
-                  (firstClick && loginError===false) ?
+              } 
+                  
+              {loginError==="no error" &&
                   <Typography color="green">
-                    Login Success!
-                  </Typography>
-                  :
-                  null
+                      Login Success!                    
+                  </Typography>                  
               }
+
           </Grid>
         </Paper>
       </Grid>

@@ -16,18 +16,19 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
 import emailjs from '@emailjs/browser';
+import axios from "axios";
 
 
 
 export default function ForgotPassword() {
 
   const theme = useTheme();
+  const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
   const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
   const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
   const navigate = useNavigate();
   const [currentVerificationCode,setCurrentVerificationCode] = React.useState("")
-  const [disableVerifycodebutton, setDisableVerifycodebutton] = React.useState(true)
-  //const [passwordOK, setPasswordOK] = React.useState(false)
+  const [disableVerifycodebutton, setDisableVerifycodebutton] = React.useState(true)  
 
 
   //Disable controls States
@@ -107,10 +108,6 @@ export default function ForgotPassword() {
     }
   }
 
-  function handleConfirmPasswordChange(){
-    console.log("password has been updated...")
-  }
-
   function changePasswordHandler (event){
     setData({...data, password:event.target.value})
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!#%*?&])[A-Za-z\d@$!#%*?&]{6,10}$/u.test(event.target.value))
@@ -127,7 +124,34 @@ export default function ForgotPassword() {
       setError({ ...error, password2: false })
   }
 
+  async function handleConfirmPasswordChange(){   
+    
+    const newData = {
+      id: data.email,      
+      password: data.password,
+      token: crossAccessToken
+    }
 
+    try{
+      const updateUser = await axios.put(`http://localhost:3001/users`, newData)      
+      if (updateUser.data && updateUser.data==="User Updated OK"){
+        Swal.fire({
+            title:"Password Updated!",
+            text:'Your password has been updated successfully!',
+            icon:'success',
+            timer: 4000
+        })
+        navigate("/");
+      }      
+    }catch(e){
+      Swal.fire({
+        title:"Error when updating this user password!",
+        text:"An error occurred while trying to update your password. Try Again or contact us!",
+        icon:'error',
+        timer: 4000
+      })
+    }    
+  }
    
   /*****************************************************SOME USE EFFECTS******************************************************/
 
