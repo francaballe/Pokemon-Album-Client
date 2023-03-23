@@ -100,7 +100,7 @@ function InventoryDetails({ allPokemons, darkMode }) {
   function showCardHandler(index) { 
     let turnedCardCpy = [...turnedCard]
     turnedCardCpy[index]=true
-    setTurnedCard(turnedCardCpy)
+    setTurnedCard(turnedCardCpy)    
   }
 
   function handleGoBack (event){
@@ -138,10 +138,9 @@ React.useEffect(()=>{
         
         <Container maxWidth="xl" sx={{ py: 10 }}>
           
-              <Grid container spacing={20}    
+              <Grid container spacing={40}    
                 alignItems="row"
-                justifyContent="center"               
-                /* sx={{pr:20}} */
+                justifyContent="center"                               
               >                    
 
             {(newPokemons.length ? newPokemons : pokemonsToShow)
@@ -156,15 +155,14 @@ React.useEffect(()=>{
                       <EmptyIcon sx={{fontSize:"50px", color: 'primary.main'} }/>
                   }
 
-                <ButtonBase disabled={disableCards}>
-                <Card                  
-                  onClick={()=>showCardHandler(index)}
-                  sx={{ borderRadius: 5, border: 2, bgcolor: disableCards? 'primary.main' : null,
-                  opacity: disableCards? 0.5 : 1,                  
-                  height: '450px',
-                  width: '240px',
+                <ButtonBase disabled={disableCards} onClick={()=>showCardHandler(index)}>
 
-                  borderColor:  card.stars===5 ? 'legendary.main' : 
+                    <Card sx={{                      
+                    borderRadius: 5, border: 2, bgcolor: disableCards? 'primary.main' : null,
+                    opacity: disableCards? 0.5 : 1,                  
+                    height: '450px',
+                    width: '240px',
+                    borderColor:  card.stars===5 ? 'legendary.main' : 
                                 card.stars===4 ? 'epic.main' : 
                                 card.stars===3 ? 'rare.main' : 
                                 card.stars===2 ? 'uncommon.light' : 
@@ -179,51 +177,65 @@ React.useEffect(()=>{
                               card.stars===4 ? '10px 5px 5px purple' : 
                               card.stars===3 ? '10px 5px 5px blue' : 
                               card.stars===2 ? '10px 5px 5px #007500' : 
-                              '10px 5px 5px grey'
-                    }}
-                >
-                  
-                  <Box m={1} p={1} display="flex" justifyContent="center">
-                  
-                    <CardMedia                      
-                      sx={turnedCard[index]===true ?
-                        {borderRadius:5,
-                        height: '250px',
-                        width: '200px',
-                        objectFit: 'contain'
-                      } :
-                      { borderRadius:3 }
-                    }
-                      component="img"
-                      image={turnedCard[index]===true ? newPokemons[index].image
-                        : "https://res.cloudinary.com/dqnpgchkn/image/upload/v1679101917/Pokemons%20Album/Pokemon-Card_f9paw9.png"
-                         }
-                      alt="unopened pokemon card"
-                    />
-                                        
-                  </Box>
+                              '10px 5px 5px grey'               
+                    }}>
 
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    {turnedCard[index]===true ? 
-                        <>
+                      <Box 
+                      display="flex" flexDirection={'column'} alignItems='center' py={4}
+                      sx={{                                                
+                        transition: 'all 0.5s linear',
+                        transformStyle: 'preserve-3d',
+                        transform: turnedCard[index]===true ? "rotateY(180deg)" : null                      
+                      }}>
+
+                        {/* CARD FRONT */}
+                        <CardMedia
+                        component="img"
+                        image="https://res.cloudinary.com/dqnpgchkn/image/upload/v1679101917/Pokemons%20Album/Pokemon-Card_f9paw9.png"
+                        alt="unopened pokemon card"                        
+                        
+                          sx={{                            
+                            position: 'absolute',                            
+                            objectFit: 'contain',
+                            backfaceVisibility: 'hidden'                        
+                          }}>                              
+                        </CardMedia>
+                          
+                        {/* CARD BACK */}
+                        <CardMedia  
+                        component="img"
+                        image={turnedCard[index] ? newPokemons[index].image : ""}
+                        alt="opened pokemon card"                        
+
+                          sx={{                          
+                            height: '250px',
+                            width: '200px',
+                            objectFit: 'contain',
+                            backfaceVisibility: 'hidden',
+                            transform: "rotateY(-180deg)",                        
+                          }}>                              
+                        </CardMedia>
+                      
+                      <CardContent sx={{
+                            backfaceVisibility: 'hidden',
+                            transform: "rotateY(-180deg)",                        
+                            }}>
+                          
                             <Typography align="center" gutterBottom variant="h6" component="h2">
-                              {card.name}  
+                                  {card.name}  
+                                </Typography>
+                                <Typography align="center" gutterBottom variant="h6" component="h2">
+                                  {card.id ? `#${card.id}` : null}
+                                </Typography>
+                                <Typography align="center">
+                                    <Rating name="read-only" value={card.stars} readOnly />
                             </Typography>
-                            <Typography align="center" gutterBottom variant="h6" component="h2">
-                              {card.id ? `#${card.id}` : null}
-                            </Typography>
-                            <Typography align="center">
-                                <Rating name="read-only" value={card.stars} readOnly />
-                            </Typography>
-                        </>
-                        :
-                        <Typography align="center" py={5}/* gutterBottom */ variant="h6" component="h2">
-                          ????
-                        </Typography>
-                    }
-                  </CardContent>                                    
-                  
-                </Card>
+                      
+                      </CardContent>                
+
+                </Box> 
+                </Card> 
+
                 </ButtonBase>
               </Grid>
               </Grid>

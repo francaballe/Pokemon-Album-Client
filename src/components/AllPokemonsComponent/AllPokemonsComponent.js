@@ -221,7 +221,8 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
             {pokemonsToShow.map((card) => (              
               <Grid item key={card.id} xs={12} sm={6} md={1.5}>{/* 12/5 porque quiero mostrar 5 por fila */}
                 <Card
-                  sx={{ py:1, px:1, height: '100%', display: 'flex', 
+                
+                  sx={{ py:1, px:1, height: '100%', display: 'flex',                                                                                           
                   flexDirection: 'column', border: 5, borderRadius: 10,
                   opacity: userData.pokemons && userData.pokemons.includes(card.id) ? '100%' : '10%',
                   borderColor:  card.stars===5 ? 'legendary.main' : 
@@ -239,7 +240,22 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
                               card.stars===4 ? '10px 5px 5px purple' : 
                               card.stars===3 ? '10px 5px 5px blue' : 
                               card.stars===2 ? '10px 5px 5px #007500' : 
-                              '10px 5px 5px grey'
+                              '10px 5px 5px grey',
+
+                    //Hover animation/transition only on available cards...
+                  ':hover': userData.pokemons && userData.pokemons.includes(card.id) ?                  
+                  {                                                          
+                      background: 
+                              (card.stars===5 ? 'orange' : 
+                              card.stars===4 ? '#800080':
+                              card.stars===3 ? '#0000ff':
+                              card.stars===2 ? '#008000':
+                              '#808080'),
+                      transition: "background 1s linear"
+                  }
+                  :
+                  null,
+                              
                     }}
                 >
                   <Box m={1} p={1} display="flex" justifyContent="center">
