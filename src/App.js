@@ -13,6 +13,7 @@ import SignUp from "../src/components/SignUp/SignUp";
 import ContactUs from "../src/components/ContactUs/ContactUs";
 import InventoryDetails from "../src/components/InventoryDetails/InventoryDetails";
 import ForgotPassword from "../src/components/ForgotPassword/ForgotPassword";
+import Purchase from "../src/components/Purchase/Purchase";
 
 
 function App() {
@@ -88,6 +89,7 @@ function App() {
                   <Route path="/pokemons/:pokemonId" element={<PokemonDetails darkMode={darkMode}/>}/>
                   <Route path="/contactus" element={<ContactUs/>}/>
                   <Route path="/inventorydetails" element={<InventoryDetails allPokemons={allPokemons} darkMode={darkMode}/>}/>
+                  <Route path="/purchase" element={<Purchase/>}/>
               </Route>
           </Route>
           <Route path="*" element={<NotFound/>}></Route>          

@@ -20,7 +20,7 @@ import { updateUserInformation } from "../../redux/actions/index";
 import Link from '@mui/material/Link';
 import { ButtonBase, createSvgIcon } from '@mui/material';
 import FiberNewIcon from '@mui/icons-material/FiberNew';
-
+import { height, width } from '@mui/system';
 
 
 
@@ -162,26 +162,27 @@ React.useEffect(()=>{
                     opacity: disableCards? 0.5 : 1,                  
                     height: '450px',
                     width: '240px',
-                    borderColor:  card.stars===5 ? 'legendary.main' : 
+                    borderColor:  turnedCard[index]===true ? (card.stars===5 ? 'legendary.main' : 
                                 card.stars===4 ? 'epic.main' : 
                                 card.stars===3 ? 'rare.main' : 
                                 card.stars===2 ? 'uncommon.light' : 
-                                'common.main',
-                  background: darkMode==="light" && 
+                                'common.main') : null,
+                  background: darkMode==="light" && turnedCard[index]===true ?
                               (card.stars===5 ? 'linear-gradient(to right bottom,orange, yellow, white)' : 
                               card.stars===4 ? 'linear-gradient(to right bottom, #800080, #b266b2)' : 
                               card.stars===3 ? 'linear-gradient(to right bottom, #0000ff, #9999ff)' : 
                               card.stars===2 ? 'linear-gradient(to right bottom, #003300, #008000)' :
-                              card.stars===1 ? 'linear-gradient(to right bottom, #262626, #808080)' : null),
-                  boxShadow: card.stars===5 ? '10px 5px 5px #C99700' : 
+                              card.stars===1 ? 'linear-gradient(to right bottom, #262626, #808080)' : null) : null,
+                  boxShadow: turnedCard[index]===true ? (card.stars===5 ? '10px 5px 5px #C99700' : 
                               card.stars===4 ? '10px 5px 5px purple' : 
                               card.stars===3 ? '10px 5px 5px blue' : 
                               card.stars===2 ? '10px 5px 5px #007500' : 
-                              '10px 5px 5px grey'               
+                              '10px 5px 5px grey') : '10px 5px 5px'            
                     }}>
 
                       <Box 
-                      display="flex" flexDirection={'column'} alignItems='center' py={4}
+                      display="flex" flexDirection={'column'} alignItems='center' 
+                      //py={turnedCard[index]===true ? 5 : 0}
                       sx={{                                                
                         transition: 'all 0.5s linear',
                         transformStyle: 'preserve-3d',
@@ -192,21 +193,29 @@ React.useEffect(()=>{
                         <CardMedia
                         component="img"
                         image="https://res.cloudinary.com/dqnpgchkn/image/upload/v1679101917/Pokemons%20Album/Pokemon-Card_f9paw9.png"
-                        alt="unopened pokemon card"                        
-                        
+                        alt="unopened pokemon card"                                                
                           sx={{                            
                             position: 'absolute',                            
                             objectFit: 'contain',
-                            backfaceVisibility: 'hidden'                        
+                            backfaceVisibility: 'hidden',
+                            height:450,
+                            width:310
                           }}>                              
-                        </CardMedia>
-                          
+                        </CardMedia>                          
+
+                        {/* Little trick to generate padding Y without the side effect when turning the card */}
+                        <CardContent sx={{
+                            backfaceVisibility: 'hidden',
+                            transform: "rotateY(-180deg)",                                                 
+                            }}>                          
+                        </CardContent>     
+
                         {/* CARD BACK */}
                         <CardMedia  
                         component="img"
                         image={turnedCard[index] ? newPokemons[index].image : ""}
                         alt="opened pokemon card"                        
-
+                        
                           sx={{                          
                             height: '250px',
                             width: '200px',
@@ -218,7 +227,7 @@ React.useEffect(()=>{
                       
                       <CardContent sx={{
                             backfaceVisibility: 'hidden',
-                            transform: "rotateY(-180deg)",                        
+                            transform: "rotateY(-180deg)",                                                 
                             }}>
                           
                             <Typography align="center" gutterBottom variant="h6" component="h2">

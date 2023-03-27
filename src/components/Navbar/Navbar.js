@@ -76,6 +76,10 @@ function Navbar({setDarkLight, onSearch}) {
     navigate(`/inventorydetails`);
   }
 
+  function shoppingHandler(){
+    navigate(`/purchase`)
+  }
+
   /****************************************************************************************************************************/
 
 
@@ -121,7 +125,7 @@ function Navbar({setDarkLight, onSearch}) {
           </Badge>    
           </Tooltip>
           <Tooltip title="Buy new figurine envelopes" sx={{mr:2}}>
-              <Button variant="contained" startIcon={<ShoppingCart/>} color='secondary'>
+              <Button variant="contained" startIcon={<ShoppingCart/>} onClick={shoppingHandler} color='secondary'>
                 Shopping
               </Button>
           </Tooltip>
