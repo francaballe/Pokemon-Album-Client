@@ -1,6 +1,6 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { TextField } from '@mui/material';
+import { Button, Paper, TextField } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -13,6 +13,9 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
+import Link from '@mui/material/Link';
+import { useNavigate } from 'react-router-dom';
+import { Stack } from '@mui/system';
 
 
 const tiers = [
@@ -43,31 +46,70 @@ const tiers = [
 
 function PricingContent() {
 
+const navigate = useNavigate();
+
+const [totalQtyBasic, setTotalQtyBasic] = React.useState(0)
+const [totalQtyAdvanced, setTotalQtyAdvanced] = React.useState(0)
+const [totalQtyPremium, setTotalQtyPremium] = React.useState(0)
 const [totalToPay, setTotalToPay] = React.useState(0)
-const [totalEnvelopes, setTotalEnvelopes] = React.useState(0)
+//const [totalEnvelopes, setTotalEnvelopes] = React.useState(0)
+
 
 
 /********************************************************HANDLERS*************************************************************/
 
+function handleGoBack (event){
+  navigate("/pokemons")
+}
+
 function handleIncrement (title){  
   switch(title){
-    case "Basic ( x1 )":      
-      setTotalToPay((parseFloat(totalToPay)+parseFloat(tiers[0].price)).toFixed(2))      
+    case "Basic ( x1 )":
+      if (totalQtyBasic<100){      
+          setTotalQtyBasic((parseInt(totalQtyBasic) + 1))      
+          setTotalToPay((parseFloat(totalToPay) + parseFloat(tiers[0].price)).toFixed(2))
+      }
       break;
-    case "Advanced ( x3 )":      
-      setTotalToPay((parseFloat(totalToPay)+parseFloat(tiers[2].price)).toFixed(2))      
+    case "Advanced ( x3 )":
+      if (totalQtyAdvanced<100){      
+          setTotalQtyAdvanced((parseInt(totalQtyAdvanced) + 1))
+          setTotalToPay((parseFloat(totalToPay) + parseFloat(tiers[2].price)).toFixed(2))
+      }
       break;
-    case "Premium ( x9 )":      
-      setTotalToPay((parseFloat(totalToPay)+parseFloat(tiers[1].price)).toFixed(2))      
+    case "Premium ( x9 )":
+      if (totalQtyPremium<100){            
+          setTotalQtyPremium((parseInt(totalQtyPremium) + 1))
+          setTotalToPay((parseFloat(totalToPay) + parseFloat(tiers[1].price)).toFixed(2))
+      }
       break;
     //default:
-  }
-  
+  }  
 }
 
 function handleDecrement (title){
-  console.log("hice click en un menos:",title)
+  switch(title){
+    case "Basic ( x1 )":
+      if (totalQtyBasic>0){
+        setTotalQtyBasic((parseInt(totalQtyBasic) - 1))
+        setTotalToPay((parseFloat(totalToPay) - parseFloat(tiers[0].price)).toFixed(2))
+      }      
+      break;
+    case "Advanced ( x3 )":
+      if (totalQtyAdvanced>0){
+        setTotalQtyAdvanced((parseInt(totalQtyAdvanced) - 1))
+        setTotalToPay((parseFloat(totalToPay) - parseFloat(tiers[2].price)).toFixed(2))
+      }
+      break;
+    case "Premium ( x9 )":
+      if (totalQtyPremium>0){
+        setTotalQtyPremium((parseInt(totalQtyPremium) - 1))
+        setTotalToPay((parseFloat(totalToPay) - parseFloat(tiers[1].price)).toFixed(2))
+      }
+      break;
+    //default:
+  }
 }
+
 
 
 /*****************************************************************************************************************************/
@@ -77,7 +119,7 @@ function handleDecrement (title){
       <GlobalStyles styles={{ ul: { margin: 0, padding: 0, listStyle: 'none' } }} />
       <CssBaseline />
           
-      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }} >
+      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 4, pb: 6 }} >
         <Typography
           component="h1"
           variant="h2"
@@ -163,29 +205,22 @@ function handleDecrement (title){
                       </Typography>
                     ))}
                   </ul>
-                </CardContent>
-                <CardActions>
-                  
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                      <IconButton onClick={()=>handleDecrement(tier.title)}>
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
-                    </Grid>
-                    <Grid item xs>
-                        <TextField fullWidth defaultValue={0} type="number"
-                        sx={{ '& input': { textAlign: 'center' } }}                        
-                        />
-                    </Grid>
-                    <Grid item>
-                      <IconButton onClick={()=>handleIncrement(tier.title)}>
-                        <AddCircleOutlineIcon />
-                      </IconButton>
-                    </Grid>
 
-                  </Grid>
-                  
-                </CardActions>
+                  <Box display="flex" justifyContent="space-evenly" alignItems="center" pt={5}>
+                        <IconButton onClick={()=>handleDecrement(tier.title)}>
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                        <Typography variant="h7" textAlign={"center"}>
+                        {tier.title.includes("Basic") ? totalQtyBasic : 
+                        tier.title.includes("Premium") ? totalQtyPremium : totalQtyAdvanced}
+                        </Typography>
+                        <IconButton onClick={()=>handleIncrement(tier.title)}>
+                          <AddCircleOutlineIcon />
+                        </IconButton>
+                  </Box>
+
+                </CardContent>
+                
               </Card>
             </Grid>
           ))}
@@ -200,11 +235,23 @@ function handleDecrement (title){
           mt: 8,
           py: [3, 6],
         }}
-      >
-      
-      <Typography component="h2" variant="h4" color="text.primary">
-                      Total: US$ {totalToPay}
-      </Typography>        
+      >                             
+          
+          <Grid container justifyContent="center">
+              <Typography component="h2" variant="h4" color="text.secondary" mr={5}>
+                  Total: US$ {totalToPay}                                         
+              </Typography> 
+              <Button variant='contained'>Confirm Payment</Button>            
+          </Grid>
+
+          <Grid container justifyContent="center" pt={5}>
+            <Typography>
+                  <Link component="button" variant="body1" onClick={handleGoBack}>
+                      Go Back
+                  </Link>
+            </Typography>            
+          </Grid>
+
 
       </Container>
       

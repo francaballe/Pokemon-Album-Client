@@ -1,3 +1,6 @@
+import FiberNewIcon from '@mui/icons-material/FiberNew';
+import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
+import { ButtonBase, createSvgIcon } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,20 +10,16 @@ import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
+import Link from '@mui/material/Link';
 import Rating from '@mui/material/Rating';
 import { ThemeProvider, useTheme } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import axios from "axios";
+import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { updateUserInformation } from "../../redux/actions/index";
-import Link from '@mui/material/Link';
-import { ButtonBase, createSvgIcon } from '@mui/material';
-import FiberNewIcon from '@mui/icons-material/FiberNew';
-import { height, width } from '@mui/system';
 
 
 
@@ -253,7 +252,7 @@ React.useEffect(()=>{
 
           <Grid container justifyContent="center" pt={5}>
             <Typography>
-                  <Link component="button" variant="body1" onClick={handleGoBack} >
+                  <Link component="button" variant="body1" onClick={handleGoBack}>
                       Go Back
                   </Link>
             </Typography>            
