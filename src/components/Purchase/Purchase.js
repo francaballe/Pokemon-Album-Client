@@ -1,9 +1,8 @@
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { Button, Paper, TextField } from '@mui/material';
+import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Container from '@mui/material/Container';
@@ -11,11 +10,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import Link from '@mui/material/Link';
-import { useNavigate } from 'react-router-dom';
-import { Stack } from '@mui/system';
+import { useNavigate/* , useLocation */ } from 'react-router-dom';
+import axios from "axios";
+import { useSelector } from 'react-redux';
 
 
 const tiers = [
@@ -47,12 +47,16 @@ const tiers = [
 function PricingContent() {
 
 const navigate = useNavigate();
+//const { search } = useLocation();
+const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
+const userData = useSelector((state) => state.loggedInUser);
 
+//LOCAL STATES
 const [totalQtyBasic, setTotalQtyBasic] = React.useState(0)
 const [totalQtyAdvanced, setTotalQtyAdvanced] = React.useState(0)
 const [totalQtyPremium, setTotalQtyPremium] = React.useState(0)
 const [totalToPay, setTotalToPay] = React.useState(0)
-//const [totalEnvelopes, setTotalEnvelopes] = React.useState(0)
+const [disablePayment, setDisablePayment] = React.useState(true)
 
 
 
@@ -110,9 +114,46 @@ function handleDecrement (title){
   }
 }
 
+async function handlePurchaseConfirmation (){
+  let totalEnvelopes = totalQtyBasic + totalQtyAdvanced*3 + totalQtyPremium*9
+  //console.log("el total de sobres es:",totalEnvelopes)
+  //console.log("y el total de la compra es:",totalToPay)
+  let cart = []
+  
+  if (totalQtyBasic>0) cart.push({
+    "name": "Basic",
+    "price":0.25,
+    "quantity":totalQtyBasic
+  })
+  if (totalQtyAdvanced>0) cart.push({
+    "name": "Advanced",
+    "price":0.6,
+    "quantity":totalQtyAdvanced
+  })
+  if (totalQtyPremium>0) cart.push({
+    "name": "Premium",
+    "price":1.5,
+    "quantity":totalQtyPremium
+  })
+
+  const data = {
+    "email": userData.id,
+    "name": userData.name,
+    "token": crossAccessToken,
+    "cart": cart   
+  }
+  const respuesta = await axios.post("http://localhost:3001/mercadopago",data)  
+  window.location.href = respuesta.data  
+}
 
 
 /*****************************************************************************************************************************/
+
+React.useEffect(()=>{
+  if (totalToPay>0) setDisablePayment(false)
+  else setDisablePayment(true)
+},[totalToPay])
+
 
   return (
     <React.Fragment>
@@ -241,7 +282,7 @@ function handleDecrement (title){
               <Typography component="h2" variant="h4" color="text.secondary" mr={5}>
                   Total: US$ {totalToPay}                                         
               </Typography> 
-              <Button variant='contained'>Confirm Payment</Button>            
+              <Button variant='contained' onClick={handlePurchaseConfirmation} disabled={disablePayment}>Confirm Payment</Button>            
           </Grid>
 
           <Grid container justifyContent="center" pt={5}>
