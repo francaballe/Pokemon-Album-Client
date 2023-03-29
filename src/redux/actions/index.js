@@ -11,10 +11,28 @@ export function updateUserInformation(envelopes,chosenOnes){
         envelopes,
         chosenOnes
     }
-return async function (dispatch) {      
+    return async function (dispatch) {      
       return dispatch({
         type: "UPDATE_USER_INFO",        
         payload: data
+      });
+    };    
+}
+
+export function updatePurchasedEnvelopes(newEnvelopes){            
+    return async function (dispatch) {      
+      return dispatch({
+        type: "UPDATE_PURCHASED_ENVELOPES",        
+        payload: newEnvelopes
+      });
+    };    
+}
+
+export function updateTempPurchasedEnvelopes(totalEnvelopes){            
+    return async function (dispatch) {      
+      return dispatch({
+        type: "UPDATE_TEMP_PURCHASED_ENVELOPES",        
+        payload: totalEnvelopes
       });
     };    
 }

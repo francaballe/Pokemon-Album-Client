@@ -12,10 +12,11 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import * as React from 'react';
-import { useNavigate/* , useLocation */ } from 'react-router-dom';
 import axios from "axios";
-import { useSelector } from 'react-redux';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { updateTempPurchasedEnvelopes } from "../../redux/actions/index";
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const tiers = [
@@ -47,9 +48,9 @@ const tiers = [
 function PricingContent() {
 
 const navigate = useNavigate();
-//const { search } = useLocation();
 const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
 const userData = useSelector((state) => state.loggedInUser);
+const dispatch = useDispatch();
 
 //LOCAL STATES
 const [totalQtyBasic, setTotalQtyBasic] = React.useState(0)
@@ -116,8 +117,8 @@ function handleDecrement (title){
 
 async function handlePurchaseConfirmation (){
   let totalEnvelopes = totalQtyBasic + totalQtyAdvanced*3 + totalQtyPremium*9
-  //console.log("el total de sobres es:",totalEnvelopes)
-  //console.log("y el total de la compra es:",totalToPay)
+  dispatch(updateTempPurchasedEnvelopes(totalEnvelopes))
+
   let cart = []
   
   if (totalQtyBasic>0) cart.push({

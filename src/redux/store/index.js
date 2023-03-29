@@ -9,6 +9,7 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: 'root',
   storage,
+  /* blacklist: ['purchasedEnvelopes'] */
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

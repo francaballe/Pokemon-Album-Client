@@ -1,4 +1,5 @@
 import AppBar from '@mui/material/AppBar';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -16,21 +17,27 @@ import Select from '@mui/material/Select';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import RarityRating from './RarityRating/RarityRating';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from "react-router-dom";
 import NoMatch from "../AllPokemonsComponent/NoMatch/NoMatch";
-import Badge from '@mui/material/Badge';
+import RarityRating from './RarityRating/RarityRating';
+import Swal from "sweetalert2";
+import axios from "axios";
+import { updatePurchasedEnvelopes, updateTempPurchasedEnvelopes } from "../../redux/actions/index";
 
 
 function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
 
   const userData = useSelector((state) => state.loggedInUser);
+  const tempTotalEnvelopes = useSelector((state) => state.purchasedEnvelopes);
   const navigate = useNavigate();
+  const { search } = useLocation();
   const [rarity, setRarity] = React.useState("Any Rarity");
   const [type, setType] = React.useState("Any Type");
   const [order, setOrder] = React.useState("No Order");
   const [available, setAvailable] = React.useState("Show All");
+  const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
+  const dispatch = useDispatch();
 
   //STYLES
   const pokemonTypeStyle = { height:'3vh' }
@@ -136,6 +143,40 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
   }
 
 /**************************************************************************************************************************/
+
+React.useEffect(()=>{  
+  if (search.includes("approved")){   
+    navigate(`/pokemons`)
+    const data = {
+      "id": userData.id,
+	    "unopenedenvelopes":userData.unopenedenvelopes+tempTotalEnvelopes,
+	    "token": crossAccessToken      
+    }
+    const respuesta = axios.put("http://localhost:3001/users",data)
+    if (respuesta)  dispatch(updatePurchasedEnvelopes(tempTotalEnvelopes))            
+    
+    Swal.fire({
+      title:"Purchase Success!",
+      text:'Please check you email for further details!',
+      icon:'success',
+      timer: 4000
+    });
+  }
+
+  if (search.includes("rejected")){    
+    Swal.fire({
+      title:"Purchase Error!",
+      text:'There was an error with your purchase',
+      icon:'error',
+      timer: 4000
+    });
+  }
+      
+  //TEMP RESET...this is magic, just like Messi
+  if (tempTotalEnvelopes>0) dispatch(updateTempPurchasedEnvelopes(0))            
+
+},[tempTotalEnvelopes])
+
 
   return (
     

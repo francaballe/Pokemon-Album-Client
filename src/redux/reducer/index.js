@@ -1,10 +1,17 @@
 const initialState = {
-    loggedInUser: {}
+    loggedInUser: {},
+    purchasedEnvelopes:0
   };
   
   function rootReducer (state = initialState, action) {
 
     switch(action.type) {
+
+        case "UPDATE_TEMP_PURCHASED_ENVELOPES":
+        return {
+          ...state,
+          purchasedEnvelopes: action.payload
+        }
 
         case "EMPTY_POKEMON_CARD":
           return {
@@ -28,6 +35,12 @@ const initialState = {
             ...state,
             loggedInUser: {...state.loggedInUser, unopenedenvelopes:action.payload.envelopes,
               pokemons:[...newPokemonList]}
+          }
+
+        case "UPDATE_PURCHASED_ENVELOPES":           
+        return {
+            ...state,
+            loggedInUser: {...state.loggedInUser, unopenedenvelopes:state.loggedInUser.unopenedenvelopes + action.payload}
           }
 
         case "RESET_USER_INFO":
