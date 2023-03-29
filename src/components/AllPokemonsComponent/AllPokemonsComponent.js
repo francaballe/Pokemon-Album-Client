@@ -27,13 +27,12 @@ import { updatePurchasedEnvelopes, updateTempPurchasedEnvelopes } from "../../re
 
 
 function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
-
   const userData = useSelector((state) => state.loggedInUser);
   const tempTotalEnvelopes = useSelector((state) => state.purchasedEnvelopes);
   const navigate = useNavigate();
   const { search } = useLocation();
-  const [rarity, setRarity] = React.useState("Any Rarity");
-  const [type, setType] = React.useState("Any Type");
+  const [rarity, setRarity] = React.useState("Any Rarity");  
+  const [type, setType] = React.useState(allTypes.length ? allTypes[0].name : "");
   const [order, setOrder] = React.useState("No Order");
   const [available, setAvailable] = React.useState("Show All");
   const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
@@ -110,6 +109,13 @@ function AllPokemonsComponent({allTypes, allPokemons, darkMode, nameFilter}) {
   React.useEffect(()=>{
     setPage(1)
   },[nameFilter])
+
+  React.useEffect(()=>{
+    if (allTypes.length)
+    setType(allTypes[0].name)
+    //console.log("el tipo cambio....")
+    //const [type, setType] = React.useState(allTypes.length ? allTypes[0].name : "Any Type");
+  },[allTypes])
   
 
   /****************************************************Handlers**************************************************************/
@@ -188,7 +194,7 @@ React.useEffect(()=>{
           <Box>
             <FormControl sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel id="Pokemon-Type-label-id">Pokemon Type</InputLabel>
-                <Select value={type} label="Pokemon Type" onChange={handleTypeChange}>
+                <Select /* value={allTypes.length ? allTypes[0].name : ""} */value={type} label="Pokemon Type" onChange={handleTypeChange}>
                     {allTypes.map(oneType => 
                     <MenuItem key={oneType.id} value={oneType.name}>
                       <Box sx={{display: "flex", alignItems:"center", justifyContent: "space-between", width:"100%"}}>

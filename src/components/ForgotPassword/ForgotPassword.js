@@ -227,7 +227,7 @@ const sendEmail = () => {
 
   const verificationKeyObj = {
     code: currentVerificationCode,
-    toemail: data.email//"francaballe@gmail.com"//"gaby_selan@hotmail.com"
+    toemail: data.email
   }
 
   emailjs.send('service_francaballe_poke', 'PasswordResetTemplate', verificationKeyObj, EMAIL_PUBLIC_KEY)
