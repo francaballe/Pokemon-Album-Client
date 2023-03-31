@@ -163,7 +163,7 @@ React.useEffect(()=>{
     
     Swal.fire({
       title:"Purchase Success!",
-      text:'Please check you email for further details!',
+      text:'Please check your available envelopes and have fun!!!',
       icon:'success',
       timer: 4000
     });
