@@ -25,10 +25,12 @@ import Swal from "sweetalert2";
 
 
 export default function SignUp() {
-
-  const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
-  const CLOUDINARY_CLOUDNAME = "dqnpgchkn"
-  const CLOUDINARY_UPLOAD_PRESET = "xnxpphbf"
+  
+  
+  
+  const CAPTCHAKEY = process.env.REACT_APP_CAPTCHAKEY;
+  const CLOUDINARY_CLOUDNAME = process.env.REACT_APP_CLOUDINARY_CLOUDNAME;
+  const CLOUDINARY_UPLOAD_PRESET = process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET;
   const theme = useTheme();
   const navigate = useNavigate();
   const [visiblePassword, setVisiblePassword] = React.useState(false)

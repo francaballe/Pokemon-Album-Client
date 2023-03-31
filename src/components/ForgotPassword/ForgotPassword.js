@@ -24,8 +24,8 @@ export default function ForgotPassword() {
 
   const theme = useTheme();
   const crossAccessToken = process.env.REACT_APP_CROSS_ACCESS_TOKEN
-  const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
-  const CAPTCHAKEY = "6LfWiPMkAAAAAIb85f8A8cHcRikqE2Lrk1z_5c3T";
+  const EMAIL_PUBLIC_KEY = process.env.REACT_APP_EMAIL_PUBLIC_KEY
+  const CAPTCHAKEY = process.env.REACT_APP_CAPTCHAKEY;  
   const navigate = useNavigate();
   const [currentVerificationCode,setCurrentVerificationCode] = React.useState("")
   const [disableVerifycodebutton, setDisableVerifycodebutton] = React.useState(true)  

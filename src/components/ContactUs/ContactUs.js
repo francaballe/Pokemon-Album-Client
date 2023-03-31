@@ -18,8 +18,8 @@ import Swal from "sweetalert2";
 
 
 export default function ContactUs() {
-  
-  const EMAIL_PUBLIC_KEY = "5NzvqVXw7MboUrYE0";
+    
+  const EMAIL_PUBLIC_KEY = process.env.REACT_APP_EMAIL_PUBLIC_KEY
   const theme = useTheme();
 
   //SENDING EMAIL CONFIGURATION
